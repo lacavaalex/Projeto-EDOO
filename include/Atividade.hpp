@@ -5,26 +5,47 @@
 #include <string>
 #include <vector>
 
-// Classe abstrata
+using namespace std;
+
 class Atividade {
 protected:
-    std::string titulo;
-    std::string data;
+    string titulo;
+    string data;
     int capacidadeMaxima;
+    // esse array dinamico vai interagir com o participante atual (usa o endereço pra otimizacao de memoria)
+    vector<Participante*> inscritos;
 
 public:
-    Atividade(std::string t, std::string d, int cap) 
-        : titulo(t), data(d), capacidadMaxima(cap) {}
+    // construtor
+    Atividade(string t, string d, int cap) 
+        : titulo(t), data(d), capacidadeMaxima(cap) {}
 
-    // Destrutor virtual 
-    virtual ~Atividade() {}
+    // destrutor
+    virtual ~Atividade() {
+      
+    }
 
-    // Métodos Virtuais Puros
-    virtual void exibirDetalhes() = 0; 
-    virtual std::string getTipo() = 0;
+    // abstração: metodos virtuais puros para serem herdados
+    virtual void exibirDetalhes() const = 0;
+    
+    // metodo que verifica se a inscricao pode ser feita
+    virtual bool validarVaga() const {
+    // size_t vai garantir que o número é comparavel com o tipo retornado por um vetor
+        return inscritos.size() < (size_t)capacidadeMaxima;
+    }
 
-    // Getters
-    std::string getTitulo() const { return titulo; }
+    // metodo de validacao da inscricao
+    void seInscrever(Participante* p) {
+        if (validarVaga()) {
+            inscritos.push_back(p);
+            cout << "Inscricao realizada com sucesso!" << endl;
+        } else {
+            cout << "Inscricao cancelada: capacidade maxima do evento atingida." << endl;
+        }
+    }
+
+    // Getters básicos
+    string getTitulo() const { return titulo; }
 };
 
 #endif
