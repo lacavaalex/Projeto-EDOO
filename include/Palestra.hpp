@@ -5,18 +5,18 @@
 
 class Palestra : public Atividade {
 private:
-    std::string palestrante;
+    string palestrante;
 
 public:
-    Palestra(std::string t, std::string d, int cap, std::string p) 
+    Palestra(string t, string d, int cap, string p) 
         : Atividade(t, d, cap), palestrante(p) {}
 
-    void exibirDetalhes() override {
-        std::cout << "[PALESTRA] " << titulo << " | Palestrante: " << palestrante 
-                  << " | Data: " << data << std::endl;
+    void exibirDetalhes() const override {
+        cout << "[PALESTRA] " << titulo << " | Palestrante: " << palestrante 
+             << " | Data: " << data << endl;
     }
 
-    std::string getTipo() override { return "Palestra"; }
+    string getTipo() const override { return "Palestra"; }
 };
 
 #endif

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
-#include "include/Palestra.hpp"
+#include "../include/Palestra.hpp" 
+#include "../include/Participante.hpp" 
 
 int main() {
     // Vetor de ponteiros para a classe base
