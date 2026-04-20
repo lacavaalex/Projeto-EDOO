@@ -31,6 +31,7 @@ public:
     void seInscrever(Participante* p) {
         if (validarVaga()) {
             inscritos.push_back(p);
+            p->adicionarAtividade(this);
             cout << "Inscricao realizada com sucesso!" << endl;
         } else {
             cout << "Inscricao cancelada: capacidade maxima atingida." << endl;
