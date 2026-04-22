@@ -20,9 +20,11 @@ public:
         cout << "[HACKATHON] " << titulo << endl;
         cout << "Data: " << data << " | Equipes: " << tamanhoEquipe << " pessoas" << endl;
         cout << "Premio: " << premiacao << endl;
-        cout << "Vagas: " << inscritos.size() << "/" << capacidadeMaxima << endl;
+        cout << "Vagas: " << inscritos.size() << "/" << static_cast<size_t>(capacidadeMaxima) << endl;
         cout << "------------------------------------------" << endl;
     }
+
+    string getTipo() const override { return "Hackathon"; }
 };
 
 #endif
