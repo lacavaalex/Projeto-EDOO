@@ -2,27 +2,25 @@
 #define HACKATHON_HPP
 
 #include "Atividade.hpp"
+#include <vector>
+#include <string>
 
-// Hackathon herdando de Atividade (Herança)
 class Hackathon : public Atividade {
 private:
-    string premiacao;
+    std::string premiacao;
     int tamanhoEquipe;
+    std::vector<std::string> stackTecnologica; // EXTRA: Agregação de dados
 
 public:
-    // Construtor: Chama o construtor da classe Base (Atividade)
-    Hackathon(string t, string d, int cap, string prem, int tam)
-        : Atividade(t, d, cap), premiacao(prem), tamanhoEquipe(tam) {}
+    // Construtor seguindo o padrão da base
+    Hackathon(std::string t, std::string d, int cap, std::string prem, int tam);
 
-    // Implementação do método virtual puro (Polimorfismo)
-    // O 'const' aqui é essencial para bater com a assinatura da base!
-    void exibirDetalhes() const override {
-        cout << "[HACKATHON] " << titulo << endl;
-        cout << "Data: " << data << " | Equipes: " << tamanhoEquipe << " pessoas" << endl;
-        cout << "Premio: " << premiacao << endl;
-        cout << "Vagas: " << inscritos.size() << "/" << capacidadeMaxima << endl;
-        cout << "------------------------------------------" << endl;
-    }
+    // ESSENCIAL: Sobrescrita do método virtual puro
+    void exibirDetalhes() const override;
+
+    // EXTRA: Métodos de lógica de negócio para destaque
+    void adicionarTecnologia(std::string tech);
+    bool ehEventoPro() const; // Diferencial: Lógica baseada em critérios
 };
 
 #endif
