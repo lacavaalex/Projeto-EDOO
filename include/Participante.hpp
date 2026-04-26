@@ -27,6 +27,7 @@ public:
     Participante(string n, string e, string c);
     string getNome();
     string getEmail();
+    string getCurso() const { return curso; }
     
     // Novos métodos para gerenciar as inscrições do aluno
     void adicionarAtividade(Atividade* a);

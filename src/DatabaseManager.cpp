@@ -47,6 +47,7 @@ void DatabaseManager::initDatabase() {
         "data TEXT NOT NULL,"
         "capacidade INTEGER NOT NULL,"
         "tipo TEXT NOT NULL);"
+        "descricao_extra TEXT);"
 
         "CREATE TABLE IF NOT EXISTS inscricoes ("
         "id_participante INTEGER,"
@@ -75,12 +76,23 @@ void DatabaseManager::listarParticipantes() {
     cout << "---------------------------------------" << endl;
 }
 
+
+bool DatabaseManager::salvarParticipante(Participante* p) { 
+    string sql = "INSERT INTO participantes (nome, email, curso) VALUES ('" 
+                 + p->getNome() + "', '" 
+                 + p->getEmail() + "', '"
+                 + p->getCurso() + "');";
+
+    return executarSQL(sql);
+}
+
 bool DatabaseManager::salvarAtividade(Atividade* a) {
-    string sql = "INSERT INTO atividades (titulo, data, capacidade, tipo) VALUES ('" 
+    string sql = "INSERT INTO atividades (titulo, data, capacidade, tipo, descricao_extra) VALUES ('" 
                  + a->getTitulo() + "', '" 
                  + a->getData() + "', " 
                  + to_string(a->getCapacidade()) + ", '" 
-                 + a->getTipo() + "');";
+                 + a->getTipo() + "', '"
+                 + a->getDescricaoExtra() + "');"; 
 
     return executarSQL(sql);
 }

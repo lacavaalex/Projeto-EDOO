@@ -26,9 +26,9 @@ public:
     bool salvarParticipante(Participante* p);
 
     bool salvarAtividade(Atividade* a);
+    bool inscreverParticipante(int idParticipante, int idAtividade);
 
     void listarParticipantes();
-
     void listarAtividades();
 };
 

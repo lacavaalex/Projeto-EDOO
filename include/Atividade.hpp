@@ -21,6 +21,8 @@ public:
 
     virtual ~Atividade() {}
 
+    virtual string getDescricaoExtra() const = 0; // Método abstrato
+
     virtual void exibirDetalhes() const = 0;
     virtual string getTipo() const = 0; 
 
