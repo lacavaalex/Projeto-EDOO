@@ -1,0 +1,9 @@
+# Executáveis
+*.exe
+programa
+
+# Banco de Dados (opcional, se quiser que cada um tenha o seu)
+*.db
+
+# Pastas de build/objetos
+*.o
