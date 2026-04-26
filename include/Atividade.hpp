@@ -39,6 +39,9 @@ public:
     }
 
     string getTitulo() const { return titulo; }
+
+    string getData() const { return data; }
+    int getCapacidade() const { return capacidadeMaxima; }
 };
 
 #endif

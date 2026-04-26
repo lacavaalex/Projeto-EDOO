@@ -1,18 +1,25 @@
 #include <iostream>
 #include "../include/DatabaseManager.hpp"
 #include "../include/Participante.hpp"
+#include "../include/Workshop.hpp"
 
 using namespace std;
 
 int main() {
-    // Inicializa o gestor do banco
     DatabaseManager dbManager("sistema.db");
-    
-    // Cria as tabelas
     dbManager.initDatabase();
 
-    cout << "\n=== SISTEMA DE ESTOQUE DE OPORTUNIDADES ===" << endl;
-    cout << "Aguardando novos comandos de interacao..." << endl;
+    // Criando uma oportunidade (ex: um Workshop de Git)
+    Atividade* novoWorkshop = new Workshop("Git Avancado", "12/05/2026", 30, "Notebook", "Git instalado");
 
+    // Salvando no banco
+    if(dbManager.salvarAtividade(novoWorkshop)) {
+        cout << "Oportunidade cadastrada com sucesso!" << endl;
+    }
+
+    // Mostrando o que tem lá
+    dbManager.listarAtividades();
+
+    delete novoWorkshop;
     return 0;
 }
