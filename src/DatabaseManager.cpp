@@ -1,10 +1,14 @@
 #include "../include/DatabaseManager.hpp"
 #include "../include/Atividade.hpp"
 #include "../include/Participante.hpp"
+#include <iostream>
+#include <string>
 
+using namespace std;
+
+// Função auxiliar para processar os resultados do banco de dados
 static int callback(void* NotUsed, int argc, char** argv, char** azColName) {
     for (int i = 0; i < argc; i++) {
-        // Aqui eu fiz pra imprimir o nome da coluna: valor
         cout << azColName[i] << ": " << (argv[i] ? argv[i] : "NULL") << " | ";
     }
     cout << endl;
@@ -34,6 +38,7 @@ bool DatabaseManager::executarSQL(string sql) {
 }
 
 void DatabaseManager::initDatabase() {
+
     string sql = 
         "CREATE TABLE IF NOT EXISTS participantes ("
         "id INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -46,8 +51,8 @@ void DatabaseManager::initDatabase() {
         "titulo TEXT NOT NULL,"
         "data TEXT NOT NULL,"
         "capacidade INTEGER NOT NULL,"
-        "tipo TEXT NOT NULL);"
-        "descricao_extra TEXT);"
+        "tipo TEXT NOT NULL,"
+        "descricao_extra TEXT);" 
 
         "CREATE TABLE IF NOT EXISTS inscricoes ("
         "id_participante INTEGER,"
@@ -60,22 +65,17 @@ void DatabaseManager::initDatabase() {
     }
 }
 
-// Método que usa o callback para listar os alunos
 void DatabaseManager::listarParticipantes() {
     string sql = "SELECT * FROM participantes;";
     char* zErrMsg = 0;
 
     cout << "\n--- LISTA DE PARTICIPANTES NO BANCO ---" << endl;
-    
-    // Aqui eu passo o nome da função callback como argumento
     if (sqlite3_exec(db, sql.c_str(), callback, 0, &zErrMsg) != SQLITE_OK) {
         cerr << "Erro ao listar: " << zErrMsg << endl;
         sqlite3_free(zErrMsg);
     }
-    
     cout << "---------------------------------------" << endl;
 }
-
 
 bool DatabaseManager::salvarParticipante(Participante* p) { 
     string sql = "INSERT INTO participantes (nome, email, curso) VALUES ('" 
@@ -111,6 +111,29 @@ bool DatabaseManager::inscreverParticipante(int idParticipante, int idAtividade)
 
     if (executarSQL(sql)) {
         cout << ">>> Vinculo salvo no banco de dados!" << endl;
+        return true;
+    }
+    return false;
+}
+
+// Implementação do UPDATE 
+bool DatabaseManager::atualizarCapacidade(int id, int novaCap) {
+    string sql = "UPDATE atividades SET capacidade = " + to_string(novaCap) + 
+                 " WHERE id = " + to_string(id) + ";";
+    
+    if (executarSQL(sql)) {
+        cout << ">>> Capacidade da oportunidade " << id << " atualizada!" << endl;
+        return true;
+    }
+    return false;
+}
+
+// Implementação do DELETE
+bool DatabaseManager::excluirAtividade(int id) {
+    string sql = "DELETE FROM atividades WHERE id = " + to_string(id) + ";";
+    
+    if (executarSQL(sql)) {
+        cout << ">>> Oportunidade " << id << " removida do sistema." << endl;
         return true;
     }
     return false;

@@ -30,6 +30,9 @@ public:
 
     void listarParticipantes();
     void listarAtividades();
+
+    bool atualizarCapacidade(int id, int novaCap); // update
+    bool excluirAtividade(int id);                // delete
 };
 
 #endif
