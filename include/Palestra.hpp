@@ -6,17 +6,14 @@
 class Palestra : public Atividade {
 private:
     string palestrante;
+    string tema;
 
 public:
-    Palestra(string t, string d, int cap, string p) 
-        : Atividade(t, d, cap), palestrante(p) {}
+    Palestra(string t, string d, int cap, string pal, string tem);
 
-    void exibirDetalhes() const override {
-        cout << "[PALESTRA] " << titulo << " | Palestrante: " << palestrante 
-             << " | Data: " << data << endl;
-    }
-
-    string getTipo() const override { return "Palestra"; }
+    void exibirDetalhes() const override;
+    string getTipo() const override;
+    bool seInscrever(Participante* p);
 };
 
 #endif
