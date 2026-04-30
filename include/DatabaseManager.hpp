@@ -7,6 +7,9 @@
 
 using namespace std;
 
+class Participante;
+class Atividade;
+
 class DatabaseManager {
 private:
     sqlite3* db;
@@ -19,6 +22,17 @@ public:
     
     // Cria as tabelas iniciais se elas não existirem
     void initDatabase(); 
+
+    bool salvarParticipante(Participante* p);
+
+    bool salvarAtividade(Atividade* a);
+    bool inscreverParticipante(int idParticipante, int idAtividade);
+
+    void listarParticipantes();
+    void listarAtividades();
+
+    bool atualizarCapacidade(int id, int novaCap); // update
+    bool excluirAtividade(int id);                // delete
 };
 
 #endif
