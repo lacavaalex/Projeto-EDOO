@@ -21,6 +21,7 @@ public:
     // EXTRA: Métodos de lógica de negócio para destaque
     void adicionarTecnologia(std::string tech);
     bool ehEventoPro() const; // Diferencial: Lógica baseada em critérios
+    std::string getTipo() const override { return "Hackathon";}
 };
 
 #endif

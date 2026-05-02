@@ -6,7 +6,7 @@
 int main() {
     std::vector<Atividade*> eventos;
 
-    eventos.push_back(new Palestra("Futuro da IA", "15/05/2026", 100, "Dr. Turing"));
+    eventos.push_back(new Palestra("Futuro da IA", "15/05/2026", 100, "Dr. Turing", "IA, Tecnologia e Inovação"));
     
     Hackathon* h = new Hackathon("CIn Code", "22/05/2026", 50, "R$ 2000", 5);
     h->adicionarTecnologia("C++");
