@@ -21,6 +21,8 @@ public:
 
     virtual ~Atividade() {}
 
+    virtual string getDescricaoExtra() const = 0; // Método abstrato
+
     virtual void exibirDetalhes() const = 0;
     virtual string getTipo() const = 0; 
 
@@ -39,6 +41,9 @@ public:
     }
 
     string getTitulo() const { return titulo; }
+
+    string getData() const { return data; }
+    int getCapacidade() const { return capacidadeMaxima; }
 };
 
 #endif
