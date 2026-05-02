@@ -35,3 +35,4 @@ programa
 # Banco de dados local
 sistema.db
 *.db-journal
+backend_server.exe

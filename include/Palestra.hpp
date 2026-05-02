@@ -12,7 +12,10 @@ public:
     Palestra(string t, string d, int cap, string pal, string tem);
 
     void exibirDetalhes() const override;
-    string getTipo() const override;
+    string getTipo() const override { return "Palestra"; }
+    
+    string getDescricaoExtra() const override { return tema; }
+    
     bool seInscrever(Participante* p);
 };
 

@@ -1,8 +1,14 @@
 #include "../include/DatabaseManager.hpp"
 #include "../include/Atividade.hpp"
 #include "../include/Participante.hpp"
+#include "../include/Workshop.hpp"
+#include "../include/Hackathon.hpp"
+#include "../include/Palestra.hpp"
+#include "../include/Clube.hpp"   
+#include "../include/Estagio.hpp" 
 #include <iostream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -38,7 +44,6 @@ bool DatabaseManager::executarSQL(string sql) {
 }
 
 void DatabaseManager::initDatabase() {
-
     string sql = 
         "CREATE TABLE IF NOT EXISTS participantes ("
         "id INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -97,11 +102,47 @@ bool DatabaseManager::salvarAtividade(Atividade* a) {
     return executarSQL(sql);
 }
 
-void DatabaseManager::listarAtividades() {
+std::vector<Atividade*> DatabaseManager::listarAtividades() {
+    std::vector<Atividade*> lista;
     string sql = "SELECT * FROM atividades;";
-    char* zErrMsg = 0;
-    cout << "\n--- OPORTUNIDADES DISPONIVEIS NO CIN ---" << endl;
-    sqlite3_exec(db, sql.c_str(), callback, 0, &zErrMsg);
+    sqlite3_stmt* stmt;
+
+    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, NULL) != SQLITE_OK) {
+        cerr << "Erro ao preparar consulta: " << sqlite3_errmsg(db) << endl;
+        return lista;
+    }
+
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        string titulo = (const char*)sqlite3_column_text(stmt, 1);
+        string data = (const char*)sqlite3_column_text(stmt, 2);
+        int capacidade = sqlite3_column_int(stmt, 3);
+        string tipo = (const char*)sqlite3_column_text(stmt, 4);
+        string desc = (const char*)sqlite3_column_text(stmt, 5);
+
+        Atividade* a = nullptr;
+        
+        if (tipo == "Workshop") {
+            
+            a = new Workshop(titulo, data, capacidade, desc, "Ver no local");
+        } else if (tipo == "Clube") {
+            
+            a = new Clube(titulo, data, capacidade, "Informatica", desc);
+        } else if (tipo == "Estagio") {
+            
+            a = new Estagio(titulo, data, capacidade, 0.0, desc);
+        } else if (tipo == "Hackathon") {
+            
+            a = new Hackathon(titulo, data, capacidade, desc, 5); 
+        } else if (tipo == "Palestra") {
+            
+            a = new Palestra(titulo, data, capacidade, "Convidado CIn", desc);
+        }
+
+        if (a) lista.push_back(a);
+    }
+
+    sqlite3_finalize(stmt);
+    return lista;
 }
 
 bool DatabaseManager::inscreverParticipante(int idParticipante, int idAtividade) {
@@ -128,7 +169,7 @@ bool DatabaseManager::atualizarCapacidade(int id, int novaCap) {
     return false;
 }
 
-// Implementação do DELETE
+// Implementação do DELETE 
 bool DatabaseManager::excluirAtividade(int id) {
     string sql = "DELETE FROM atividades WHERE id = " + to_string(id) + ";";
     

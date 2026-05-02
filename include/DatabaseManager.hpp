@@ -4,6 +4,7 @@
 #include "sqlite3.h"
 #include <string>
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -29,7 +30,7 @@ public:
     bool inscreverParticipante(int idParticipante, int idAtividade);
 
     void listarParticipantes();
-    void listarAtividades();
+    std::vector<Atividade*> listarAtividades();
 
     bool atualizarCapacidade(int id, int novaCap); // update
     bool excluirAtividade(int id);                // delete

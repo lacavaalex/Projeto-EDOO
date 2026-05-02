@@ -9,18 +9,17 @@ class Hackathon : public Atividade {
 private:
     std::string premiacao;
     int tamanhoEquipe;
-    std::vector<std::string> stackTecnologica; // EXTRA: Agregação de dados
+    std::vector<std::string> stackTecnologica;
 
 public:
-    // Construtor seguindo o padrão da base
     Hackathon(std::string t, std::string d, int cap, std::string prem, int tam);
 
-    // ESSENCIAL: Sobrescrita do método virtual puro
     void exibirDetalhes() const override;
 
-    // EXTRA: Métodos de lógica de negócio para destaque
     void adicionarTecnologia(std::string tech);
-    bool ehEventoPro() const; // Diferencial: Lógica baseada em critérios
+    bool ehEventoPro() const; 
+    
+    std::string getDescricaoExtra() const override { return premiacao; }
     std::string getTipo() const override { return "Hackathon";}
 };
 

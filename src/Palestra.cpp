@@ -13,11 +13,6 @@ void Palestra::exibirDetalhes() const {
          << endl;
 }
 
-// Retorna o tipo da atividade
-string Palestra::getTipo() const {
-    return "Palestra";
-}
-
 // Inscreve um participante na palestra
 bool Palestra::seInscrever(Participante* p) {
     if (validarVaga()) {
