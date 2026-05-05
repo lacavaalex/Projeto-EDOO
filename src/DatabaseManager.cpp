@@ -12,7 +12,6 @@
 
 using namespace std;
 
-// Função auxiliar para processar os resultados do banco de dados
 static int callback(void* NotUsed, int argc, char** argv, char** azColName) {
     for (int i = 0; i < argc; i++) {
         cout << azColName[i] << ": " << (argv[i] ? argv[i] : "NULL") << " | ";
@@ -73,7 +72,6 @@ void DatabaseManager::initDatabase() {
 void DatabaseManager::listarParticipantes() {
     string sql = "SELECT * FROM participantes;";
     char* zErrMsg = 0;
-
     cout << "\n--- LISTA DE PARTICIPANTES NO BANCO ---" << endl;
     if (sqlite3_exec(db, sql.c_str(), callback, 0, &zErrMsg) != SQLITE_OK) {
         cerr << "Erro ao listar: " << zErrMsg << endl;
@@ -87,7 +85,6 @@ bool DatabaseManager::salvarParticipante(Participante* p) {
                  + p->getNome() + "', '" 
                  + p->getEmail() + "', '"
                  + p->getCurso() + "');";
-
     return executarSQL(sql);
 }
 
@@ -98,7 +95,6 @@ bool DatabaseManager::salvarAtividade(Atividade* a) {
                  + to_string(a->getCapacidade()) + ", '" 
                  + a->getTipo() + "', '"
                  + a->getDescricaoExtra() + "');"; 
-
     return executarSQL(sql);
 }
 
@@ -113,6 +109,8 @@ std::vector<Atividade*> DatabaseManager::listarAtividades() {
     }
 
     while (sqlite3_step(stmt) == SQLITE_ROW) {
+        
+        int id = sqlite3_column_int(stmt, 0); 
         string titulo = (const char*)sqlite3_column_text(stmt, 1);
         string data = (const char*)sqlite3_column_text(stmt, 2);
         int capacidade = sqlite3_column_int(stmt, 3);
@@ -122,23 +120,21 @@ std::vector<Atividade*> DatabaseManager::listarAtividades() {
         Atividade* a = nullptr;
         
         if (tipo == "Workshop") {
-            
             a = new Workshop(titulo, data, capacidade, desc, "Ver no local");
         } else if (tipo == "Clube") {
-            
             a = new Clube(titulo, data, capacidade, "Informatica", desc);
         } else if (tipo == "Estagio") {
-            
             a = new Estagio(titulo, data, capacidade, 0.0, desc);
         } else if (tipo == "Hackathon") {
-            
             a = new Hackathon(titulo, data, capacidade, desc, 5); 
         } else if (tipo == "Palestra") {
-            
             a = new Palestra(titulo, data, capacidade, "Convidado CIn", desc);
         }
 
-        if (a) lista.push_back(a);
+        if (a) {
+            a->setId(id); 
+            lista.push_back(a);
+        }
     }
 
     sqlite3_finalize(stmt);
@@ -149,7 +145,6 @@ bool DatabaseManager::inscreverParticipante(int idParticipante, int idAtividade)
     string sql = "INSERT INTO inscricoes (id_participante, id_atividade) VALUES (" 
                  + to_string(idParticipante) + ", " 
                  + to_string(idAtividade) + ");";
-
     if (executarSQL(sql)) {
         cout << ">>> Vinculo salvo no banco de dados!" << endl;
         return true;
@@ -157,11 +152,9 @@ bool DatabaseManager::inscreverParticipante(int idParticipante, int idAtividade)
     return false;
 }
 
-// Implementação do UPDATE 
 bool DatabaseManager::atualizarCapacidade(int id, int novaCap) {
     string sql = "UPDATE atividades SET capacidade = " + to_string(novaCap) + 
                  " WHERE id = " + to_string(id) + ";";
-    
     if (executarSQL(sql)) {
         cout << ">>> Capacidade da oportunidade " << id << " atualizada!" << endl;
         return true;
@@ -169,10 +162,8 @@ bool DatabaseManager::atualizarCapacidade(int id, int novaCap) {
     return false;
 }
 
-// Implementação do DELETE 
 bool DatabaseManager::excluirAtividade(int id) {
     string sql = "DELETE FROM atividades WHERE id = " + to_string(id) + ";";
-    
     if (executarSQL(sql)) {
         cout << ">>> Oportunidade " << id << " removida do sistema." << endl;
         return true;

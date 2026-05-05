@@ -13,85 +13,135 @@
 
 using namespace std;
 
+struct CORSMiddleware {
+    struct context {};
+
+    void before_handle(crow::request& req, crow::response& res, context&) {
+        res.add_header("Access-Control-Allow-Origin", "*");
+        res.add_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        res.add_header("Access-Control-Allow-Headers", "Content-Type, Accept, Authorization");
+        res.add_header("Access-Control-Max-Age", "86400");
+
+        if (req.method == crow::HTTPMethod::Options) {
+            res.code = 204;
+            res.end();
+        }
+    }
+
+    void after_handle(crow::request&, crow::response& res, context&) {
+        res.add_header("Access-Control-Allow-Origin", "*");
+        res.add_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        res.add_header("Access-Control-Allow-Headers", "Content-Type, Accept, Authorization");
+    }
+};
+
 int main() {
     DatabaseManager dbManager("sistema.db");
     dbManager.initDatabase();
 
-    crow::App<crow::CORSHandler> app;
+    crow::App<CORSMiddleware> app;
 
-    auto& cors = app.get_middleware<crow::CORSHandler>();
-    cors
-      .global()
-      .origin("*")
-      .methods("POST"_method, "GET"_method, "OPTIONS"_method)
-      .headers("Content-Type", "Authorization");
-
-
-    CROW_ROUTE(app, "/api/atividades")
+    // GET - Listar todas as atividades
+    CROW_ROUTE(app, "/api/atividades").methods("GET"_method)
     ([&dbManager](){
-        auto atividades = dbManager.listarAtividades(); 
+        crow::response res;
+        auto atividades = dbManager.listarAtividades();
         string json_output = "[";
         for (size_t i = 0; i < atividades.size(); ++i) {
             json_output += atividadeParaJSON(atividades[i]);
             if (i < atividades.size() - 1) json_output += ",";
         }
         json_output += "]";
-        
-        crow::response res(json_output);
+        res.body = json_output;
         res.set_header("Content-Type", "application/json");
-        
-
         for (auto a : atividades) delete a;
         return res;
     });
 
-
-    auto cadastrar = [&](const crow::request& req, string tipo) {
+    // PUT - Atualizar vagas
+    CROW_ROUTE(app, "/api/atualizar_atividade/<int>").methods("PUT"_method)
+    ([&dbManager](const crow::request& req, int id){
+        crow::response res;
         auto x = crow::json::load(req.body);
-        if (!x) return crow::response(400, "JSON Invalido");
+        if (!x || !x.has("vagas")) { res.code = 400; return res; }
+        if (dbManager.atualizarCapacidade(id, x["vagas"].i())) {
+            res.code = 200;
+            res.body = "{\"ok\":true}";
+        } else {
+            res.code = 500;
+        }
+        return res;
+    });
+
+    // DELETE - Remover atividade
+    CROW_ROUTE(app, "/api/deletar_atividade/<int>").methods("DELETE"_method)
+    ([&dbManager](const crow::request&, int id){
+        crow::response res;
+        res.code = dbManager.excluirAtividade(id) ? 200 : 404;
+        return res;
+    });
+
+    // POST - Cadastrar
+    auto cadastrar = [&](const crow::request& req, string tipo) {
+        crow::response res;
+        auto x = crow::json::load(req.body);
+        if (!x) { res.code = 400; return res; }
 
         try {
+            string titulo = x.has("titulo") ? string(x["titulo"].s()) : "Sem Titulo";
+            string data   = x.has("data")   ? string(x["data"].s())   : "Sem Data";
+            int vagas     = x.has("vagas")  ? x["vagas"].i()          : 0;
+
             Atividade* novo = nullptr;
-            if (tipo == "Workshop") novo = new Workshop(x["titulo"].s(), x["data"].s(), x["vagas"].i(), x["materiais"].s(), x["requisitos"].s());
-            else if (tipo == "Clube") novo = new Clube(x["titulo"].s(), x["data"].s(), x["vagas"].i(), x["area"].s(), x["edital"].s());
-            else if (tipo == "Estagio") novo = new Estagio(x["titulo"].s(), x["data"].s(), x["vagas"].i(), x["bolsa"].d(), x["local"].s());
-            else if (tipo == "Hackathon") novo = new Hackathon(x["titulo"].s(), x["data"].s(), x["vagas"].i(), x["premiacao"].s(), x["tamanho_equipe"].i());
-            else if (tipo == "Palestra") novo = new Palestra(x["titulo"].s(), x["data"].s(), x["vagas"].i(), x["palestrante"].s(), x["tema"].s());
+
+            if (tipo == "Workshop") {
+                string mat  = x.has("materiais")  ? string(x["materiais"].s())  : "";
+                string reqs = x.has("requisitos") ? string(x["requisitos"].s()) : "";
+                novo = new Workshop(titulo, data, vagas, mat, reqs);
+            } else if (tipo == "Palestra") {
+                string pal  = x.has("palestrante") ? string(x["palestrante"].s()) : "";
+                string tema = x.has("tema")        ? string(x["tema"].s())        : "";
+                novo = new Palestra(titulo, data, vagas, pal, tema);
+            } else if (tipo == "Clube") {
+                string area   = x.has("area")   ? string(x["area"].s())   : "";
+                string edital = x.has("edital") ? string(x["edital"].s()) : "";
+                novo = new Clube(titulo, data, vagas, area, edital);
+            } else if (tipo == "Estagio") {
+                double bolsa = (x.has("bolsa") && x["bolsa"].t() == crow::json::type::Number)
+                               ? x["bolsa"].d() : 0.0;
+                string local = x.has("local") ? string(x["local"].s()) : "";
+                novo = new Estagio(titulo, data, vagas, bolsa, local);
+            } else if (tipo == "Hackathon") {
+                string prem = x.has("premiacao")      ? string(x["premiacao"].s()) : "";
+                int    tam  = x.has("tamanho_equipe") ? x["tamanho_equipe"].i()    : 5;
+                novo = new Hackathon(titulo, data, vagas, prem, tam);
+            }
 
             if (novo) {
-                dbManager.salvarAtividade(novo);
+                bool ok = dbManager.salvarAtividade(novo);
                 delete novo;
-                return crow::response(200, "OK");
+                res.code = ok ? 200 : 500;
+                return res;
             }
-        } catch (...) { 
-            return crow::response(500, "Erro ao processar objeto"); 
+        } catch (const std::exception& e) {
+            cout << "[ERRO C++] " << e.what() << endl;
+            res.code = 500;
+            return res;
         }
-        return crow::response(404);
+
+        res.code = 400;
+        return res;
     };
 
+    CROW_ROUTE(app, "/api/cadastrar_workshop").methods("POST"_method)  ([&](const crow::request& req){ return cadastrar(req, "Workshop");  });
+    CROW_ROUTE(app, "/api/cadastrar_clube").methods("POST"_method)     ([&](const crow::request& req){ return cadastrar(req, "Clube");     });
+    CROW_ROUTE(app, "/api/cadastrar_estagio").methods("POST"_method)   ([&](const crow::request& req){ return cadastrar(req, "Estagio");   });
+    CROW_ROUTE(app, "/api/cadastrar_hackathon").methods("POST"_method) ([&](const crow::request& req){ return cadastrar(req, "Hackathon"); });
+    CROW_ROUTE(app, "/api/cadastrar_palestra").methods("POST"_method)  ([&](const crow::request& req){ return cadastrar(req, "Palestra");  });
 
-    CROW_ROUTE(app, "/api/cadastrar_workshop").methods("POST"_method)([&](const crow::request& req){ return cadastrar(req, "Workshop"); });
-    CROW_ROUTE(app, "/api/cadastrar_clube").methods("POST"_method)([&](const crow::request& req){ return cadastrar(req, "Clube"); });
-    CROW_ROUTE(app, "/api/cadastrar_estagio").methods("POST"_method)([&](const crow::request& req){ return cadastrar(req, "Estagio"); });
-    CROW_ROUTE(app, "/api/cadastrar_hackathon").methods("POST"_method)([&](const crow::request& req){ return cadastrar(req, "Hackathon"); });
-    CROW_ROUTE(app, "/api/cadastrar_palestra").methods("POST"_method)([&](const crow::request& req){ return cadastrar(req, "Palestra"); });
-
-    int opcao;
-    do {
-        cout << "\n========== SISTEMA CIn-EVENTS (BACKEND) ==========" << endl;
-        cout << "9. INICIAR SERVIDOR WEB" << endl;
-        cout << "0. Sair" << endl;
-        cout << "Escolha: ";
-        
-        if (!(cin >> opcao)) {
-            cin.clear(); cin.ignore(1000, '\n'); opcao = -1;
-        } else { cin.ignore(); }
-
-        if (opcao == 9) {
-            cout << ">>> SERVIDOR ATIVO em http://localhost:8080" << endl;
-            app.port(8080).multithreaded().run();
-        }
-    } while (opcao != 0);
+    cout << ">>> SERVIDOR ATIVO em http://localhost:8080" << endl;
+    cout << ">>> Pressione Ctrl+C para encerrar." << endl;
+    app.port(8080).multithreaded().run();
 
     return 0;
 }
