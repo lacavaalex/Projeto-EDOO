@@ -10,6 +10,7 @@ using namespace std;
 
 class Atividade {
 protected:
+    int id = 0; 
     string titulo;
     string data;
     int capacidadeMaxima;
@@ -20,6 +21,11 @@ public:
         : titulo(t), data(d), capacidadeMaxima(cap) {}
 
     virtual ~Atividade() {}
+
+    // Métodos para gerenciar o ID do banco de dados
+    void setId(int novoId) { id = novoId; }
+    int getId() const { return id; }
+
 
     virtual string getDescricaoExtra() const = 0; // Método abstrato
 
@@ -41,7 +47,6 @@ public:
     }
 
     string getTitulo() const { return titulo; }
-
     string getData() const { return data; }
     int getCapacidade() const { return capacidadeMaxima; }
 };
