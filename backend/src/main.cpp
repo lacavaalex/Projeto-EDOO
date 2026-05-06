@@ -8,7 +8,7 @@
 #include "../include/Clube.hpp"
 #include "../include/Palestra.hpp"
 #include "../include/Hackathon.hpp"
-#include "crow_all.h"
+#include "../include/crow_all.h"
 #include "json_helper.hpp"
 
 using namespace std;
@@ -36,7 +36,7 @@ struct CORSMiddleware {
 };
 
 int main() {
-    DatabaseManager dbManager("sistema.db");
+    DatabaseManager dbManager("./data/sistema.db");
     dbManager.initDatabase();
 
     crow::App<CORSMiddleware> app;
