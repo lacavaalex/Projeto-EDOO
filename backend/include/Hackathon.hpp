@@ -9,10 +9,11 @@ class Hackathon : public Atividade {
 private:
     std::string premiacao;
     int tamanhoEquipe;
+    std::string linkEdital;
     std::vector<std::string> stackTecnologica;
 
 public:
-    Hackathon(std::string t, std::string d, int cap, std::string prem, int tam);
+    Hackathon(std::string t, std::string d, int cap, std::string prem, int tam, std::string edital);
 
     void exibirDetalhes() const override;
 
@@ -20,7 +21,7 @@ public:
     bool ehEventoPro() const; 
     
     std::string getDescricaoExtra() const override { 
-        return "Premiação: " + premiacao + " | Equipe: " + std::to_string(tamanhoEquipe) + " pessoas"; 
+        return "Premiação: " + premiacao + " | Equipe: " + std::to_string(tamanhoEquipe) + " pessoas | Edital: " + linkEdital;
     }
     std::string getTipo() const override { return "Hackathon";}
 };

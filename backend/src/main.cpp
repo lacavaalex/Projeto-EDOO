@@ -112,9 +112,10 @@ int main() {
                 string local = x.has("local") ? string(x["local"].s()) : "";
                 novo = new Estagio(titulo, data, vagas, bolsa, local);
             } else if (tipo == "Hackathon") {
-                string prem = x.has("premiacao")      ? string(x["premiacao"].s()) : "";
-                int    tam  = x.has("tamanho_equipe") ? x["tamanho_equipe"].i()    : 5;
-                novo = new Hackathon(titulo, data, vagas, prem, tam);
+                string prem = x.has("premiacao") ? string(x["premiacao"].s()) : "";
+                int tam = x.has("tamanho_equipe") ? x["tamanho_equipe"].i() : 5;
+                string edital = x.has("edital") ? string(x["edital"].s()) : "Sem edital";
+                novo = new Hackathon(titulo, data, vagas, prem, tam, edital); 
             }
 
             if (novo) {

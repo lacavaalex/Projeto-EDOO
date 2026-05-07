@@ -2,8 +2,8 @@
 #include <iostream>
 
 // Construtor: Inicializa a classe base Atividade e os atributos próprios
-Hackathon::Hackathon(std::string t, std::string d, int cap, std::string prem, int tam)
-    : Atividade(t, d, cap), premiacao(prem), tamanhoEquipe(tam) {}
+Hackathon::Hackathon(std::string t, std::string d, int cap, std::string prem, int tam, std::string edital)
+    : Atividade(t, d, cap), premiacao(prem), tamanhoEquipe(tam), linkEdital(edital) {}
 
 void Hackathon::adicionarTecnologia(std::string tech) {
     stackTecnologica.push_back(tech);

@@ -222,6 +222,7 @@ function App() {
                       <>
                         <input name="premiacao" placeholder="Premiação" onChange={handleChange} style={{ padding: '5px' }} />
                         <input name="tamanho_equipe" type="number" placeholder="Pessoas por equipe" onChange={handleChange} style={{ padding: '5px' }} />
+                        <input name="edital" placeholder="Link do Edital (URL)" onChange={handleChange} style={{ padding: '5px' }} />
                       </>
                     )}
                     {tipo === 'Palestra' && (

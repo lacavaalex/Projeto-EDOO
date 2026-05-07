@@ -126,7 +126,7 @@ std::vector<Atividade*> DatabaseManager::listarAtividades() {
         } else if (tipo == "Estagio") {
             a = new Estagio(titulo, data, capacidade, 0.0, descExtra);
         } else if (tipo == "Hackathon") {
-            a = new Hackathon(titulo, data, capacidade, descExtra, 0); 
+            a = new Hackathon(titulo, data, capacidade, descExtra, 0, "");
         } else if (tipo == "Palestra") {
             a = new Palestra(titulo, data, capacidade, "", descExtra);
         }
