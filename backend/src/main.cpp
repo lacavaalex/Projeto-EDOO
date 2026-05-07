@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <fstream>
 #include "../include/DatabaseManager.hpp"
 #include "../include/Participante.hpp"
 #include "../include/Workshop.hpp"
@@ -39,7 +40,71 @@ int main() {
 
     crow::App<CORSMiddleware> app;
 
-    // GET - Listar todas as atividades
+    CROW_ROUTE(app, "/api/auth/registrar").methods("POST"_method)
+([](const crow::request& req){
+    auto novo_user = crow::json::load(req.body);
+    if (!novo_user) return crow::response(400);
+
+    crow::json::wvalue usuarios_lista;
+    
+    ifstream i("./data/usuarios.json");
+    if (i.is_open()) {
+        // Lendo o arquivo inteiro para uma string
+        string conteudo((istreambuf_iterator<char>(i)), istreambuf_iterator<char>());
+        i.close();
+
+        if (!conteudo.empty()) {
+            auto atual = crow::json::load(conteudo);
+            if (atual) {
+                usuarios_lista = std::move(atual);
+            } else {
+                usuarios_lista = crow::json::wvalue::list();
+            }
+        } else {
+            usuarios_lista = crow::json::wvalue::list();
+        }
+    } else {
+        usuarios_lista = crow::json::wvalue::list();
+    }
+
+    int size = usuarios_lista.size();
+    usuarios_lista[size]["nome"] = string(novo_user["nome"].s());
+    usuarios_lista[size]["email"] = string(novo_user["email"].s());
+    usuarios_lista[size]["curso"] = string(novo_user["curso"].s());
+
+    ofstream o("./data/usuarios.json");
+    o << usuarios_lista.dump();
+    o.close();
+
+    return crow::response(200, "{\"status\":\"sucesso\"}");
+});
+
+    CROW_ROUTE(app, "/api/auth/login").methods("POST"_method)
+([](const crow::request& req){
+    auto login_data = crow::json::load(req.body);
+    if (!login_data) return crow::response(400);
+
+    ifstream i("./data/usuarios.json");
+    if (!i.is_open()) return crow::response(401, "{\"erro\":\"Arquivo nao encontrado\"}");
+
+    string conteudo((istreambuf_iterator<char>(i)), istreambuf_iterator<char>());
+    i.close();
+
+    if (conteudo.empty()) return crow::response(401, "{\"erro\":\"Nenhum usuario cadastrado\"}");
+
+    auto usuarios = crow::json::load(conteudo);
+    for (auto& u : usuarios) {
+        if (u["email"].s() == login_data["email"].s()) {
+            crow::json::wvalue res;
+            res["nome"] = string(u["nome"].s());
+            res["email"] = string(u["email"].s());
+            res["curso"] = string(u["curso"].s());
+            return crow::response(200, res);
+        }
+    }
+    return crow::response(401, "{\"erro\":\"Usuario nao encontrado\"}");
+});
+
     CROW_ROUTE(app, "/api/atividades").methods("GET"_method)
     ([&dbManager](){
         crow::response res;
@@ -56,7 +121,6 @@ int main() {
         return res;
     });
 
-    // PUT - Atualizar vagas
     CROW_ROUTE(app, "/api/atualizar_atividade/<int>").methods("PUT"_method)
     ([&dbManager](const crow::request& req, int id){
         crow::response res;
@@ -71,7 +135,6 @@ int main() {
         return res;
     });
 
-    // DELETE - Remover atividade
     CROW_ROUTE(app, "/api/deletar_atividade/<int>").methods("DELETE"_method)
     ([&dbManager](const crow::request&, int id){
         crow::response res;
@@ -79,7 +142,6 @@ int main() {
         return res;
     });
 
-    // POST - Cadastrar
     auto cadastrar = [&](const crow::request& req, string tipo) {
         crow::response res;
         auto x = crow::json::load(req.body);
