@@ -26,9 +26,23 @@ function App() {
   useEffect(() => { carregarAtividades(); }, []);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
+  let { name, value } = e.target;
+
+  if (name === "data") {
+    value = value.replace(/\D/g, ""); 
+
+    if (value.length > 2 && value.length <= 4) {
+      value = `${value.slice(0, 2)}/${value.slice(2)}`;
+    } 
+    else if (value.length > 4) {
+      value = `${value.slice(0, 2)}/${value.slice(2, 4)}/${value.slice(4, 8)}`;
+    }
+
+    value = value.slice(0, 10);
+  }
+
+  setFormData(prev => ({ ...prev, [name]: value }));
+};
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -180,7 +194,7 @@ function App() {
                 </select>
 
                 <input name="titulo" placeholder="Título do Evento *" onChange={handleChange} required style={{ padding: '8px' }} />
-                <input name="data" placeholder="Data (ex: 15/05/2024) *" onChange={handleChange} required style={{ padding: '8px' }} />
+                <input name="data" placeholder="Data (dd/mm/aaaa) *" value={formData.data} onChange={handleChange} required style={{ padding: '8px' }} />
                 <input name="vagas" type="number" placeholder="Limite de Vagas *" onChange={handleChange} required style={{ padding: '8px' }} />
 
                 <div style={{ padding: '10px', background: '#eee', marginTop: '5px' }}>
