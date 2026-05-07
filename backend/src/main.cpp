@@ -99,9 +99,9 @@ int main() {
                 string reqs = x.has("requisitos") ? string(x["requisitos"].s()) : "";
                 novo = new Workshop(titulo, data, vagas, mat, reqs);
             } else if (tipo == "Palestra") {
-                string pal  = x.has("palestrante") ? string(x["palestrante"].s()) : "";
-                string tema = x.has("tema")        ? string(x["tema"].s())        : "";
-                novo = new Palestra(titulo, data, vagas, pal, tema);
+                string pal = x.has("palestrante") ? string(x["palestrante"].s()) : "Convidado";
+                string tem = x.has("tema") ? string(x["tema"].s()) : "Sem tema";
+                novo = new Palestra(titulo, data, vagas, pal, tem);
             } else if (tipo == "Clube") {
                 string area   = x.has("area")   ? string(x["area"].s())   : "";
                 string edital = x.has("edital") ? string(x["edital"].s()) : "";

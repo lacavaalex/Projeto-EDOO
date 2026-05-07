@@ -14,7 +14,9 @@ public:
     void exibirDetalhes() const override;
     string getTipo() const override { return "Palestra"; }
     
-    string getDescricaoExtra() const override { return tema; }
+    string getDescricaoExtra() const override { 
+        return palestrante + tema; 
+    }  
     
     bool seInscrever(Participante* p);
 };

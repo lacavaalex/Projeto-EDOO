@@ -115,24 +115,25 @@ std::vector<Atividade*> DatabaseManager::listarAtividades() {
         string data = (const char*)sqlite3_column_text(stmt, 2);
         int capacidade = sqlite3_column_int(stmt, 3);
         string tipo = (const char*)sqlite3_column_text(stmt, 4);
-        string desc = (const char*)sqlite3_column_text(stmt, 5);
+        string descExtra = (const char*)sqlite3_column_text(stmt, 5);
 
         Atividade* a = nullptr;
         
         if (tipo == "Workshop") {
-            a = new Workshop(titulo, data, capacidade, desc, "Ver no local");
+        a = new Workshop(titulo, data, capacidade, descExtra, ""); 
         } else if (tipo == "Clube") {
-            a = new Clube(titulo, data, capacidade, "Informatica", desc);
+            a = new Clube(titulo, data, capacidade, "", descExtra);
         } else if (tipo == "Estagio") {
-            a = new Estagio(titulo, data, capacidade, 0.0, desc);
+            a = new Estagio(titulo, data, capacidade, 0.0, descExtra);
         } else if (tipo == "Hackathon") {
-            a = new Hackathon(titulo, data, capacidade, desc, 5); 
+            a = new Hackathon(titulo, data, capacidade, descExtra, 0); 
         } else if (tipo == "Palestra") {
-            a = new Palestra(titulo, data, capacidade, "Convidado CIn", desc);
+            a = new Palestra(titulo, data, capacidade, "", descExtra);
         }
 
         if (a) {
             a->setId(id); 
+            a->setDescricao(descExtra);
             lista.push_back(a);
         }
     }

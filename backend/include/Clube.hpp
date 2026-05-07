@@ -17,7 +17,7 @@ public:
     string getTipo() const override { return "Clube"; }
 
     string getDescricaoExtra() const override {
-        return "Area: " + areaEstudo + " | Edital: " + linkEdital;
+        return areaEstudo + linkEdital;
     }
 
     void exibirDetalhes() const override {

@@ -19,7 +19,9 @@ public:
     void adicionarTecnologia(std::string tech);
     bool ehEventoPro() const; 
     
-    std::string getDescricaoExtra() const override { return premiacao; }
+    std::string getDescricaoExtra() const override { 
+        return "Premiação: " + premiacao + " | Equipe: " + std::to_string(tamanhoEquipe) + " pessoas"; 
+    }
     std::string getTipo() const override { return "Hackathon";}
 };
 

@@ -9,7 +9,7 @@ using namespace std;
 class Workshop : public Atividade {
 private:
     string materiais;
-    string software;
+    string requesitos;
 public:
     Workshop(std::string t, std::string d, int cap, std::string mat, std::string req);
     void exibirDetalhes() const override;
@@ -17,7 +17,7 @@ public:
     string getTipo() const override { return "Workshop"; }
 
     string getDescricaoExtra() const override {
-    return "Materiais: " + materiais + " | Requisitos: " + software;
+    return materiais + requesitos;
 }
 };
 #endif 

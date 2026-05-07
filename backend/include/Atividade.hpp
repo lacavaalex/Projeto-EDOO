@@ -13,6 +13,7 @@ protected:
     int id = 0; 
     string titulo;
     string data;
+    string descricao;
     int capacidadeMaxima;
     vector<Participante*> inscritos;
 
@@ -49,6 +50,7 @@ public:
     string getTitulo() const { return titulo; }
     string getData() const { return data; }
     int getCapacidade() const { return capacidadeMaxima; }
+    void setDescricao(string d) { descricao = d; }
 };
 
 #endif

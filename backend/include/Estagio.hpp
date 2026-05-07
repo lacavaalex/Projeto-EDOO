@@ -20,7 +20,7 @@ public:
     string getTipo() const override { return "Estagio"; }
 
     string getDescricaoExtra() const override {
-        return "Local: " + local + " | Bolsa: R$ " + to_string(valorBolsa);
+        return  local;
     }
 
     void exibirDetalhes() const override {

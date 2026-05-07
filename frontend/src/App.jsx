@@ -14,6 +14,7 @@ function App() {
     area: '', edital: '', bolsa: 0.0, local: '', premiacao: '',
     tamanho_equipe: 5, palestrante: '', tema: ''
   });
+  const [mensagem, setMensagem] = useState("");
 
   const carregarAtividades = () => {
     fetch(`${API}/atividades`)
@@ -38,7 +39,13 @@ function App() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
-    }).then(res => { if (res.ok) { alert("✅ Sucesso!"); carregarAtividades(); } });
+    }).then(res => { 
+      if (res.ok) { 
+        setMensagem("✅ EVENTO_GRAVADO_COM_SUCESSO");
+        setTimeout(() => setMensagem(""), 3000);
+        carregarAtividades(); 
+      } 
+    });
   };
 
   const handleDelete = (id) => {
@@ -64,46 +71,162 @@ function App() {
 
         <h1 style={{ color: CORES.cin }}>{`// CIn-Events_`}</h1>
 
+        {mensagem && (
+          <div style={{ 
+            position: 'fixed', 
+            top: '20px', 
+            right: '20px', 
+            background: CORES.cin, 
+            color: '#fff', 
+            padding: '15px', 
+            border: '2px solid #fff',
+            boxShadow: '4px 4px 0px #000',
+            zIndex: 1000 
+          }}>
+            {mensagem}
+          </div>
+        )}
+
         <Routes>
           <Route path="/" element={
-            <div style={{ display: 'grid', gap: '15px', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' }}>
+            <div style={{ display: 'grid', gap: '20px', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))' }}>
               {atividades.map((atv) => (
-                <div key={atv.id} style={{ border: `1px solid ${CORES.cin}`, padding: '15px', boxShadow: `4px 4px 0px ${CORES.cin}` }}>
-                  <span style={{ fontWeight: 'bold', color: CORES.cin, fontSize: '12px' }}>{atv.tipo}</span>
-                  <h3>{atv.titulo}</h3>
-                  <p>📅 {atv.data} | 🎯 Vagas: {atv.vagas}</p>
-                  {editando?.id === atv.id ? (
-                    <div style={{ display: 'flex', gap: '5px' }}>
-                      <input type="number" value={editando.vagas} onChange={(e) => setEditando({ ...editando, vagas: e.target.value })} style={{ width: '50px' }} />
-                      <button onClick={() => handleUpdate(atv.id)}>Salvar</button>
+                <div key={atv.id} style={{ 
+                  border: `1px solid ${CORES.cin}`, 
+                  padding: '15px', 
+                  boxShadow: `6px 6px 0px ${CORES.cin}`,
+                  background: '#fff',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between'
+                }}>
+                  <div>
+                    <span style={{ 
+                      background: CORES.cin, 
+                      color: '#fff', 
+                      padding: '2px 8px', 
+                      fontSize: '10px', 
+                      textTransform: 'uppercase',
+                      fontWeight: 'bold' 
+                    }}>{atv.tipo}</span>
+                    
+                    <h3 style={{ margin: '10px 0 5px 0', borderBottom: '1px solid #eee' }}>{atv.titulo}</h3>
+                    
+                    <div style={{ fontSize: '14px', marginBottom: '10px' }}>
+                      <p style={{ margin: '3px 0' }}><strong>📅 Data:</strong> {atv.data}</p>
+                      <p style={{ margin: '3px 0' }}><strong>🎯 Capacidade:</strong> {atv.vagas} vagas</p>
                     </div>
-                  ) : (
-                    <div style={{ display: 'flex', gap: '8px' }}>
-                      <button onClick={() => setEditando({ id: atv.id, vagas: atv.vagas })} style={{fontFamily: CORES.fonte}}>editar</button>
-                      <button onClick={() => handleDelete(atv.id)} style={{ background: CORES.cin, color: '#fff', border: 'none', fontFamily: CORES.fonte }}>deletar</button>
-                    </div>
-                  )}
+
+                    {/* SEÇÃO DE DETALHES COMPLETOS (Vem do getDescricaoExtra do C++) */}
+                    {atv.descricao && (
+                      <div style={{ 
+                        marginTop: '10px', 
+                        padding: '10px', 
+                        background: '#f9f9f9', 
+                        borderLeft: `3px solid ${CORES.cin}`,
+                        fontSize: '13px'
+                      }}>
+                        <span style={{ color: '#888', fontWeight: 'bold', display: 'block', marginBottom: '5px' }}>
+                          {`// especificacoes_`}
+                        </span>
+                        <p style={{ margin: 0, whiteSpace: 'pre-wrap', color: '#333', lineHeight: '1.4' }}>
+                          {atv.descricao}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  <div style={{ marginTop: '20px', display: 'flex', gap: '10px', borderTop: '1px solid #eee', paddingTop: '10px' }}>
+                    {editando?.id === atv.id ? (
+                      <>
+                        <input 
+                          type="number" 
+                          value={editando.vagas} 
+                          onChange={(e) => setEditando({ ...editando, vagas: e.target.value })} 
+                          style={{ width: '60px', fontFamily: CORES.fonte }} 
+                        />
+                        <button onClick={() => handleUpdate(atv.id)} style={{ cursor: 'pointer' }}>salvar</button>
+                        <button onClick={() => setEditando(null)} style={{ cursor: 'pointer' }}>cancelar</button>
+                      </>
+                    ) : (
+                      <>
+                        <button 
+                          onClick={() => setEditando({ id: atv.id, vagas: atv.vagas })} 
+                          style={{ background: 'none', border: '1px solid #ccc', cursor: 'pointer', fontFamily: CORES.fonte, padding: '2px 8px' }}
+                        >
+                          editar
+                        </button>
+                        <button 
+                          onClick={() => handleDelete(atv.id)} 
+                          style={{ background: CORES.cin, color: '#fff', border: 'none', cursor: 'pointer', fontFamily: CORES.fonte, padding: '2px 8px' }}
+                        >
+                          deletar
+                        </button>
+                      </>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
           } />
 
           <Route path="/cadastro" element={
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '400px', border: `1px solid #ccc`, padding: '15px' }}>
-              <select value={tipo} onChange={(e) => setTipo(e.target.value)} style={{fontFamily: CORES.fonte}}>{['Workshop', 'Clube', 'Estagio', 'Hackathon', 'Palestra'].map(t => <option key={t}>{t}</option>)}</select>
-              <input name="titulo" placeholder="Título *" onChange={handleChange} required />
-              <input name="data" placeholder="Data *" onChange={handleChange} required />
-              <input name="vagas" type="number" placeholder="Vagas *" onChange={handleChange} required />
-              {tipo === 'Workshop' && <><input name="materiais" placeholder="Materiais" onChange={handleChange} /><input name="requisitos" placeholder="Software" onChange={handleChange} /></>}
-              {tipo === 'Clube' && <><input name="area" placeholder="Área" onChange={handleChange} /><input name="edital" placeholder="Edital" onChange={handleChange} /></>}
-              {tipo === 'Estagio' && <><input name="bolsa" type="number" placeholder="Bolsa" onChange={handleChange} /><input name="local" placeholder="Local" onChange={handleChange} /></>}
-              {tipo === 'Hackathon' && <><input name="premiacao" placeholder="Prêmio" onChange={handleChange} /><input name="tamanho_equipe" type="number" placeholder="Equipe" onChange={handleChange} /></>}
-              {tipo === 'Palestra' && <><input name="palestrante" placeholder="Palestrante" onChange={handleChange} /><input name="tema" placeholder="Tema" onChange={handleChange} /></>}
-              <button type="submit" style={{ background: CORES.cin, color: '#fff', border: 'none', padding: '10px', cursor: 'pointer', fontFamily: CORES.fonte }}>./cadastrar.sh</button>
-            </form>
+            <div style={{ maxWidth: '500px' }}>
+              <h2 style={{ fontSize: '18px' }}>{`> novo_cadastro.sh`}</h2>
+              <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px', border: `1px solid ${CORES.cin}`, padding: '20px', boxShadow: `4px 4px 0px ${CORES.cin}` }}>
+                <label style={{ fontSize: '12px' }}>TIPO DE EVENTO:</label>
+                <select value={tipo} onChange={(e) => setTipo(e.target.value)} style={{ padding: '8px', fontFamily: CORES.fonte }}>
+                  {['Workshop', 'Clube', 'Estagio', 'Hackathon', 'Palestra'].map(t => <option key={t} value={t}>{t}</option>)}
+                </select>
+
+                <input name="titulo" placeholder="Título do Evento *" onChange={handleChange} required style={{ padding: '8px' }} />
+                <input name="data" placeholder="Data (ex: 15/05/2024) *" onChange={handleChange} required style={{ padding: '8px' }} />
+                <input name="vagas" type="number" placeholder="Limite de Vagas *" onChange={handleChange} required style={{ padding: '8px' }} />
+
+                <div style={{ padding: '10px', background: '#eee', marginTop: '5px' }}>
+                   <span style={{ fontSize: '11px', fontWeight: 'bold' }}>DETALHES ESPECÍFICOS DE {tipo.toUpperCase()}:</span>
+                   <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px' }}>
+                    {tipo === 'Workshop' && (
+                      <>
+                        <input name="materiais" placeholder="Materiais necessários" onChange={handleChange} style={{ padding: '5px' }} />
+                        <input name="requisitos" placeholder="Software/Requisitos" onChange={handleChange} style={{ padding: '5px' }} />
+                      </>
+                    )}
+                    {tipo === 'Clube' && (
+                      <>
+                        <input name="area" placeholder="Área de Estudo" onChange={handleChange} style={{ padding: '5px' }} />
+                        <input name="edital" placeholder="Link do Edital" onChange={handleChange} style={{ padding: '5px' }} />
+                      </>
+                    )}
+                    {tipo === 'Estagio' && (
+                      <>
+                        <input name="bolsa" type="number" placeholder="Valor da Bolsa (R$)" onChange={handleChange} style={{ padding: '5px' }} />
+                        <input name="local" placeholder="Empresa/Local" onChange={handleChange} style={{ padding: '5px' }} />
+                      </>
+                    )}
+                    {tipo === 'Hackathon' && (
+                      <>
+                        <input name="premiacao" placeholder="Premiação" onChange={handleChange} style={{ padding: '5px' }} />
+                        <input name="tamanho_equipe" type="number" placeholder="Pessoas por equipe" onChange={handleChange} style={{ padding: '5px' }} />
+                      </>
+                    )}
+                    {tipo === 'Palestra' && (
+                      <>
+                        <input name="palestrante" placeholder="Nome do Palestrante" onChange={handleChange} style={{ padding: '5px' }} />
+                        <input name="tema" placeholder="Tema Principal" onChange={handleChange} style={{ padding: '5px' }} />
+                      </>
+                    )}
+                   </div>
+                </div>
+
+                <button type="submit" style={{ background: CORES.cin, color: '#fff', border: 'none', padding: '12px', cursor: 'pointer', fontFamily: CORES.fonte, fontWeight: 'bold', marginTop: '10px' }}>
+                  EXEC_CADASTRAR
+                </button>
+              </form>
+            </div>
           } />
         </Routes>
-        {erro && <p style={{ color: 'red' }}>{erro}</p>}
+        {erro && <p style={{ color: 'red', marginTop: '20px' }}>{erro}</p>}
       </div>
     </Router>
   );
