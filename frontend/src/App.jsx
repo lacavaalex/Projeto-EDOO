@@ -46,7 +46,7 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const rotas = { 'Workshop': 'cadastrar_workshop', 'Clube': 'cadastrar_clube', 'Estagio': 'cadastrar_estagio', 'Hackathon': 'cadastrar_hackathon', 'Palestra': 'cadastrar_palestra' };
+    const rotas = { 'Workshop': 'cadastrar_workshop', 'Hackathon': 'cadastrar_hackathon', 'Palestra': 'cadastrar_palestra' };
     const payload = { ...formData, vagas: parseInt(formData.vagas), bolsa: parseFloat(formData.bolsa), tamanho_equipe: parseInt(formData.tamanho_equipe) };
 
     fetch(`${API}/${rotas[tipo]}`, {
@@ -190,7 +190,7 @@ function App() {
               <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px', border: `1px solid ${CORES.cin}`, padding: '20px', boxShadow: `4px 4px 0px ${CORES.cin}` }}>
                 <label style={{ fontSize: '12px' }}>TIPO DE EVENTO:</label>
                 <select value={tipo} onChange={(e) => setTipo(e.target.value)} style={{ padding: '8px', fontFamily: CORES.fonte }}>
-                  {['Workshop', 'Clube', 'Estagio', 'Hackathon', 'Palestra'].map(t => <option key={t} value={t}>{t}</option>)}
+                  {['Workshop', 'Hackathon', 'Palestra'].map(t => <option key={t} value={t}>{t}</option>)}
                 </select>
 
                 <input name="titulo" placeholder="Título do Evento *" onChange={handleChange} required style={{ padding: '8px' }} />
@@ -204,18 +204,6 @@ function App() {
                       <>
                         <input name="materiais" placeholder="Materiais necessários" onChange={handleChange} style={{ padding: '5px' }} />
                         <input name="requisitos" placeholder="Software/Requisitos" onChange={handleChange} style={{ padding: '5px' }} />
-                      </>
-                    )}
-                    {tipo === 'Clube' && (
-                      <>
-                        <input name="area" placeholder="Área de Estudo" onChange={handleChange} style={{ padding: '5px' }} />
-                        <input name="edital" placeholder="Link do Edital" onChange={handleChange} style={{ padding: '5px' }} />
-                      </>
-                    )}
-                    {tipo === 'Estagio' && (
-                      <>
-                        <input name="bolsa" type="number" placeholder="Valor da Bolsa (R$)" onChange={handleChange} style={{ padding: '5px' }} />
-                        <input name="local" placeholder="Empresa/Local" onChange={handleChange} style={{ padding: '5px' }} />
                       </>
                     )}
                     {tipo === 'Hackathon' && (

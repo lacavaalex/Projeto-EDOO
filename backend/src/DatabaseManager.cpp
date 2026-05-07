@@ -4,8 +4,6 @@
 #include "../include/Workshop.hpp"
 #include "../include/Hackathon.hpp"
 #include "../include/Palestra.hpp"
-#include "../include/Clube.hpp"   
-#include "../include/Estagio.hpp" 
 #include <iostream>
 #include <string>
 #include <vector>
@@ -121,10 +119,6 @@ std::vector<Atividade*> DatabaseManager::listarAtividades() {
         
         if (tipo == "Workshop") {
         a = new Workshop(titulo, data, capacidade, descExtra, "");
-        } else if (tipo == "Clube") {
-            a = new Clube(titulo, data, capacidade, "", descExtra);
-        } else if (tipo == "Estagio") {
-            a = new Estagio(titulo, data, capacidade, 0.0, descExtra);
         } else if (tipo == "Hackathon") {
             a = new Hackathon(titulo, data, capacidade, descExtra, 0, "");
         } else if (tipo == "Palestra") {

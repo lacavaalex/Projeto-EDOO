@@ -4,8 +4,6 @@
 #include "../include/DatabaseManager.hpp"
 #include "../include/Participante.hpp"
 #include "../include/Workshop.hpp"
-#include "../include/Estagio.hpp"
-#include "../include/Clube.hpp"
 #include "../include/Palestra.hpp"
 #include "../include/Hackathon.hpp"
 #include "../include/crow_all.h"
@@ -102,15 +100,6 @@ int main() {
                 string pal = x.has("palestrante") ? string(x["palestrante"].s()) : "Convidado";
                 string tem = x.has("tema") ? string(x["tema"].s()) : "Sem tema";
                 novo = new Palestra(titulo, data, vagas, pal, tem);
-            } else if (tipo == "Clube") {
-                string area   = x.has("area")   ? string(x["area"].s())   : "";
-                string edital = x.has("edital") ? string(x["edital"].s()) : "";
-                novo = new Clube(titulo, data, vagas, area, edital);
-            } else if (tipo == "Estagio") {
-                double bolsa = (x.has("bolsa") && x["bolsa"].t() == crow::json::type::Number)
-                               ? x["bolsa"].d() : 0.0;
-                string local = x.has("local") ? string(x["local"].s()) : "";
-                novo = new Estagio(titulo, data, vagas, bolsa, local);
             } else if (tipo == "Hackathon") {
                 string prem = x.has("premiacao") ? string(x["premiacao"].s()) : "";
                 int tam = x.has("tamanho_equipe") ? x["tamanho_equipe"].i() : 5;
@@ -135,8 +124,6 @@ int main() {
     };
 
     CROW_ROUTE(app, "/api/cadastrar_workshop").methods("POST"_method)  ([&](const crow::request& req){ return cadastrar(req, "Workshop");  });
-    CROW_ROUTE(app, "/api/cadastrar_clube").methods("POST"_method)     ([&](const crow::request& req){ return cadastrar(req, "Clube");     });
-    CROW_ROUTE(app, "/api/cadastrar_estagio").methods("POST"_method)   ([&](const crow::request& req){ return cadastrar(req, "Estagio");   });
     CROW_ROUTE(app, "/api/cadastrar_hackathon").methods("POST"_method) ([&](const crow::request& req){ return cadastrar(req, "Hackathon"); });
     CROW_ROUTE(app, "/api/cadastrar_palestra").methods("POST"_method)  ([&](const crow::request& req){ return cadastrar(req, "Palestra");  });
 
