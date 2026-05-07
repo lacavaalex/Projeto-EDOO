@@ -120,7 +120,7 @@ std::vector<Atividade*> DatabaseManager::listarAtividades() {
         Atividade* a = nullptr;
         
         if (tipo == "Workshop") {
-        a = new Workshop(titulo, data, capacidade, descExtra, ""); 
+        a = new Workshop(titulo, data, capacidade, descExtra, "");
         } else if (tipo == "Clube") {
             a = new Clube(titulo, data, capacidade, "", descExtra);
         } else if (tipo == "Estagio") {
@@ -128,7 +128,7 @@ std::vector<Atividade*> DatabaseManager::listarAtividades() {
         } else if (tipo == "Hackathon") {
             a = new Hackathon(titulo, data, capacidade, descExtra, 0, "");
         } else if (tipo == "Palestra") {
-            a = new Palestra(titulo, data, capacidade, "", descExtra);
+            a = new Palestra(titulo, data, capacidade, descExtra, "");
         }
 
         if (a) {

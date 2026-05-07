@@ -15,7 +15,10 @@ public:
     string getTipo() const override { return "Palestra"; }
     
     string getDescricaoExtra() const override { 
-        return palestrante + tema; 
+        if (palestrante.find("Palestrante:") != string::npos) {
+        return palestrante;
+    }
+        return "Palestrante: " + palestrante + " | Tema: " + tema;
     }  
     
     bool seInscrever(Participante* p);

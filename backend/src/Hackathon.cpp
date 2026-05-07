@@ -17,21 +17,16 @@ bool Hackathon::ehEventoPro() const {
 void Hackathon::exibirDetalhes() const {
     std::cout << "\n========== [ HACKATHON ] ==========" << std::endl;
     std::cout << "Título: " << titulo << std::endl;
-    std::cout << "Data: " << data << " | Equipes: " << tamanhoEquipe << " pessoas" << std::endl;
+    std::cout << "Data: " << data << std::endl;
+    std::cout << "Capacidade: " << capacidadeMaxima << " vagas" << std::endl;
+    std::cout << "Tamanho da Equipe: " << (tamanhoEquipe > 0 ? std::to_string(tamanhoEquipe) : "Não definido") << std::endl;
     std::cout << "Premiação: " << premiacao << std::endl;
-
-    if (!stackTecnologica.empty()) {
-        std::cout << "Tecnologias: ";
-        for (const auto& tech : stackTecnologica) {
-            std::cout << "[" << tech << "] ";
-        }
-        std::cout << std::endl;
+    
+    if (!linkEdital.empty()) {
+        std::cout << "Edital: " << linkEdital << std::endl;
     }
 
     if (ehEventoPro()) {
         std::cout << ">>> CATEGORIA: COMPETIÇÃO AVANÇADA <<<" << std::endl;
     }
-    
-    std::cout << "Inscritos: " << inscritos.size() << "/" << capacidadeMaxima << std::endl;
-    std::cout << "===================================\n" << std::endl;
 }

@@ -21,7 +21,11 @@ public:
     bool ehEventoPro() const; 
     
     std::string getDescricaoExtra() const override { 
-        return "Premiação: " + premiacao + " | Equipe: " + std::to_string(tamanhoEquipe) + " pessoas | Edital: " + linkEdital;
+    if (premiacao.find("Premiação:") != std::string::npos) {
+        return premiacao; 
+    }
+    return "Premiação: " + premiacao + " | Equipe: " + std::to_string(tamanhoEquipe) + 
+           " pessoas | Edital: " + linkEdital; 
     }
     std::string getTipo() const override { return "Hackathon";}
 };
