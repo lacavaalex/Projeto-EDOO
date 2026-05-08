@@ -76,7 +76,7 @@ function App() {
   const [erro, setErro] = useState(null);
   const [tipo, setTipo] = useState('Workshop');
   const [editando, setEditando] = useState(null);
-  const [formData, setFormData] = useState({ titulo: '', data: '', vagas: 0, materiais: '', requisitos: '', premiacao: '', tamanho_equipe: 5, palestrante: '', tema: '', edital: '' });
+  const [formData, setFormData] = useState({ titulo: '', data: '', dataInicio: '', dataFim: '', horario: '', local: '', duracao: '', vagas: 0, materiais: '', requisitos: '', premiacao: '', tamanho_equipe: 5, palestrante: '', tema: '', edital: '' });
   const [mensagem, setMensagem] = useState("");
 
   useEffect(() => {
@@ -91,12 +91,21 @@ function App() {
 
   const handleChange = (e) => {
     let { name, value } = e.target;
-    if (name === "data") {
+    if (name === "data" || name === "data_inicio" || name === "data_fim") {
       value = value.replace(/\D/g, ""); 
       if (value.length > 2 && value.length <= 4) value = `${value.slice(0, 2)}/${value.slice(2)}`;
       else if (value.length > 4) value = `${value.slice(0, 2)}/${value.slice(2, 4)}/${value.slice(4, 8)}`;
       value = value.slice(0, 10);
     }
+
+    if (name === "horario" || name === "duracao") {
+    value = value.replace(/\D/g, "");
+    if (value.length > 2) {
+      value = `${value.slice(0, 2)}:${value.slice(2, 4)}`;
+    }
+    value = value.slice(0, 5);
+    }
+
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
@@ -132,7 +141,7 @@ function App() {
   };
 
   const logout = () => {
-    localStorage.removeItem('sessao_ativa'); // Corrigido o nome da chave
+    localStorage.removeItem('sessao_ativa');
     setUsuarioLogado(null);
   };
 
@@ -174,16 +183,48 @@ function App() {
                     <span style={{ background: CORES.cin, color: '#fff', padding: '2px 8px', fontSize: '10px', textTransform: 'uppercase', fontWeight: 'bold' }}>{atv.tipo}</span>
                     <h3 style={{ margin: '10px 0 5px 0', borderBottom: '1px solid #eee' }}>{atv.titulo}</h3>
                     <div style={{ fontSize: '14px', marginBottom: '10px' }}>
-                      <p style={{ margin: '3px 0' }}><strong>📅 Data:</strong> {atv.data}</p>
+                      <p style={{ margin: '3px 0' }}><strong>📅 Data do Evento:</strong> {atv.data}</p>
                       <p style={{ margin: '3px 0' }}><strong>🎯 Capacidade:</strong> {atv.vagas} vagas</p>
                     </div>
 
                     {atv.descricao && (
-                      <div style={{ marginTop: '10px', padding: '10px', background: '#f9f9f9', borderLeft: `3px solid ${CORES.cin}`, fontSize: '13px' }}>
-                        <span style={{ color: '#888', fontWeight: 'bold', display: 'block', marginBottom: '5px' }}>{`// especificacoes_`}</span>
-                        <p style={{ margin: 0, whiteSpace: 'pre-wrap', color: '#333', lineHeight: '1.4' }}>{atv.descricao}</p>
+                      <div style={{ 
+                        marginTop: '15px', 
+                        padding: '15px', 
+                        background: '#fcfcfc', 
+                        border: `1px solid #eee`,
+                        borderLeft: `5px solid ${CORES.cin}`,
+                        boxShadow: 'inset 2px 2px 5px rgba(0,0,0,0.02)'
+                      }}>
+                        <span style={{ 
+                          color: CORES.cin, 
+                          fontWeight: 'bold', 
+                          display: 'block', 
+                          marginBottom: '10px',
+                          fontSize: '11px',
+                          letterSpacing: '1px'
+                        }}>
+                          {`// especificacoes_`}
+                        </span>
+                        
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          {atv.descricao.split(' | ').map((info, index) => (
+                            <div key={index} style={{ 
+                              display: 'flex', 
+                              alignItems: 'baseline', 
+                              gap: '10px',
+                              fontSize: '14px',
+                              color: '#333',
+                              borderBottom: '1px dashed #efefef',
+                              paddingBottom: '4px'
+                            }}>
+                              <span style={{ color: CORES.cin, fontWeight: 'bold' }}>►</span>
+                              <span>{info}</span>
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    )}
+)}
                   </div>
 
                   <div style={{ marginTop: '20px', display: 'flex', gap: '10px', borderTop: '1px solid #eee', paddingTop: '10px' }}>
@@ -218,8 +259,31 @@ function App() {
 
                   <input name="titulo" placeholder="Título do Evento *" onChange={handleChange} required style={{ padding: '8px' }} />
                   <input name="data" placeholder="Data (dd/mm/aaaa) *" value={formData.data} onChange={handleChange} required style={{ padding: '8px' }} />
-                  <input name="vagas" type="number" placeholder="Limite de Vagas *" onChange={handleChange} required style={{ padding: '8px' }} />
-
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <input 
+                      name="data_inicio" 
+                      placeholder="Início Inscrições *" 
+                      value={formData.data_inicio} 
+                      onChange={handleChange} 
+                      required 
+                      style={{ padding: '8px', flex: 1 }} 
+                    />
+                    <input 
+                      name="data_fim" 
+                      placeholder="Fim Inscrições *" 
+                      value={formData.data_fim} 
+                      onChange={handleChange} 
+                      required 
+                      style={{ padding: '8px', flex: 1 }} 
+                    />
+                  </div>
+                  {tipo !== 'Hackathon' && (
+                    <>
+                      <input name="horario" placeholder="Horário *" value={formData.horario} onChange={handleChange} required style={{ padding: '8px' }} />
+                      <input name="local" placeholder="Local *" value={formData.local} onChange={handleChange} required style={{ padding: '8px' }} />
+                      <input name="duracao" placeholder="Duração *" value={formData.duracao} onChange={handleChange} required style={{ padding: '8px' }} />
+                    </>
+                  )}
                   <div style={{ padding: '10px', background: '#eee', marginTop: '5px' }}>
                     <span style={{ fontSize: '11px', fontWeight: 'bold' }}>DETALHES ESPECÍFICOS:</span>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px' }}>

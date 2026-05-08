@@ -150,6 +150,11 @@ int main() {
         try {
             string titulo = x.has("titulo") ? string(x["titulo"].s()) : "Sem Titulo";
             string data   = x.has("data")   ? string(x["data"].s())   : "Sem Data";
+            string dataInicio = x.has("data_inicio") ? string(x["data_inicio"].s()) : "00/00/0000";
+            string dataFim    = x.has("data_fim")    ? string(x["data_fim"].s())    : "00/00/0000";
+            string horario    = x.has("horario")    ? string(x["horario"].s())    : "00:00";
+            string local      = x.has("local")      ? string(x["local"].s())      : "Sem local";
+            string duracao    = x.has("duracao")    ? string(x["duracao"].s())    : "00:00";
             int vagas     = x.has("vagas")  ? x["vagas"].i()          : 0;
 
             Atividade* novo = nullptr;
@@ -157,16 +162,16 @@ int main() {
             if (tipo == "Workshop") {
                 string mat  = x.has("materiais")  ? string(x["materiais"].s())  : "";
                 string reqs = x.has("requisitos") ? string(x["requisitos"].s()) : "";
-                novo = new Workshop(titulo, data, vagas, mat, reqs);
+                novo = new Workshop(titulo, data, dataInicio, dataFim, vagas, mat, reqs, horario, local, duracao);
             } else if (tipo == "Palestra") {
                 string pal = x.has("palestrante") ? string(x["palestrante"].s()) : "Convidado";
                 string tem = x.has("tema") ? string(x["tema"].s()) : "Sem tema";
-                novo = new Palestra(titulo, data, vagas, pal, tem);
+                novo = new Palestra(titulo, data, dataInicio, dataFim, vagas, pal, tem, horario, local, duracao);
             } else if (tipo == "Hackathon") {
                 string prem = x.has("premiacao") ? string(x["premiacao"].s()) : "";
                 int tam = x.has("tamanho_equipe") ? x["tamanho_equipe"].i() : 5;
                 string edital = x.has("edital") ? string(x["edital"].s()) : "Sem edital";
-                novo = new Hackathon(titulo, data, vagas, prem, tam, edital); 
+                novo = new Hackathon(titulo, data, dataInicio, dataFim, vagas, prem, tam, edital); 
             }
 
             if (novo) {

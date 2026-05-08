@@ -1,7 +1,7 @@
 #include "../include/Palestra.hpp"
 
-Palestra::Palestra(string t, string d, int cap, string pal, string tem)
-    : Atividade(t, d, cap), palestrante(pal), tema(tem) {}
+Palestra::Palestra(string t, string d, string di, string df, int cap, string pal, string tem, string h, string l, string dur)
+    : Atividade(t, d, di, df, cap, h, l, dur), palestrante(pal), tema(tem) {}
 
 // Exibe os detalhes da palestra no console
 void Palestra::exibirDetalhes() const {

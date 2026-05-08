@@ -11,7 +11,7 @@ private:
     string materiais;
     string requisitos;
 public:
-    Workshop(std::string t, std::string d, int cap, std::string mat, std::string req);
+    Workshop(std::string t, std::string d, std::string di, std::string df, int cap, std::string mat, std::string req, string h = "", string l = "", string dur = "");
     void exibirDetalhes() const override;
 
     string getTipo() const override { return "Workshop"; }
@@ -20,7 +20,7 @@ public:
     if (materiais.find("Materiais:") != string::npos) {
         return materiais; 
     }
-    return "Materiais: " + materiais + " | Requisitos: " + requisitos;
+    return "Materiais: " + materiais + " | Requisitos: " + requisitos + " | Horário: " + getHorario() + " | Duração: " + getDuracao() + " | Local: " + getLocal();
 }
 };
 #endif 

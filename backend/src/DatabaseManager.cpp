@@ -87,12 +87,15 @@ bool DatabaseManager::salvarParticipante(Participante* p) {
 }
 
 bool DatabaseManager::salvarAtividade(Atividade* a) {
+    string periodo = "Inscrições: " + a->getDataInicio() + " até " + a->getDataFim() + " | ";
+    string infoCompleta = periodo + a->getDescricaoExtra();
+
     string sql = "INSERT INTO atividades (titulo, data, capacidade, tipo, descricao_extra) VALUES ('" 
                  + a->getTitulo() + "', '" 
                  + a->getData() + "', " 
                  + to_string(a->getCapacidade()) + ", '" 
                  + a->getTipo() + "', '"
-                 + a->getDescricaoExtra() + "');"; 
+                 + infoCompleta + "');";    
     return executarSQL(sql);
 }
 
@@ -118,11 +121,11 @@ std::vector<Atividade*> DatabaseManager::listarAtividades() {
         Atividade* a = nullptr;
         
         if (tipo == "Workshop") {
-        a = new Workshop(titulo, data, capacidade, descExtra, "");
+        a = new Workshop(titulo, data, "", "", capacidade, descExtra, "", "", "", ""); 
         } else if (tipo == "Hackathon") {
-            a = new Hackathon(titulo, data, capacidade, descExtra, 0, "");
+            a = new Hackathon(titulo, data, "", "", capacidade, descExtra, 0, "");
         } else if (tipo == "Palestra") {
-            a = new Palestra(titulo, data, capacidade, descExtra, "");
+            a = new Palestra(titulo, data, "", "", capacidade, descExtra, "", "", "", "");
         }
 
         if (a) {
