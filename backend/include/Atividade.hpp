@@ -20,7 +20,6 @@ protected:
     string duracao;
     string descricao;
     int capacidadeMaxima;
-    vector<Participante*> inscritos;
 
 public:
     Atividade(string t, string d, string di, string df, int cap, string h = "", string l = "", string dur = "") 
@@ -35,22 +34,7 @@ public:
 
     virtual string getDescricaoExtra() const = 0; // Método abstrato
 
-    virtual void exibirDetalhes() const = 0;
-    virtual string getTipo() const = 0; 
-
-    virtual bool validarVaga() const {
-        return inscritos.size() < (size_t)capacidadeMaxima;
-    }
-
-    void seInscrever(Participante* p) {
-        if (validarVaga()) {
-            inscritos.push_back(p);
-            p->adicionarAtividade(this);
-            cout << "Inscricao realizada com sucesso!" << endl;
-        } else {
-            cout << "Inscricao cancelada: capacidade maxima atingida." << endl;
-        }
-    }
+    virtual string getTipo() const = 0;
 
     string getTitulo() const { return titulo; }
     string getData() const { return data; }

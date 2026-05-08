@@ -15,8 +15,6 @@ private:
 public:
     Hackathon(std::string t, std::string d, std::string di, std::string df, int cap, std::string prem, int tam, std::string edital);
 
-    void exibirDetalhes() const override;
-
     void adicionarTecnologia(std::string tech);
     bool ehEventoPro() const; 
     

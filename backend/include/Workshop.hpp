@@ -12,7 +12,6 @@ private:
     string requisitos;
 public:
     Workshop(std::string t, std::string d, std::string di, std::string df, int cap, std::string mat, std::string req, string h = "", string l = "", string dur = "");
-    void exibirDetalhes() const override;
 
     string getTipo() const override { return "Workshop"; }
 

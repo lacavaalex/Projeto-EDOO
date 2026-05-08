@@ -11,7 +11,6 @@ private:
 public:
     Palestra(string t, string d, string di, string df, int cap, string pal, string tem, string h = "", string l = "", string dur = "");
 
-    void exibirDetalhes() const override;
     string getTipo() const override { return "Palestra"; }
     
     string getDescricaoExtra() const override { 
