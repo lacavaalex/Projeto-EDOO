@@ -1,37 +1,54 @@
 # CIn-Events - Gestão de Eventos do CIn/UFPE
 
-Este projeto consiste em um sistema desenvolvido para a disciplina de **Estrutura de Dados Orientada a Objetos (EDOO)** do Centro de Informática da UFPE. O objetivo é gerenciar os eventos realizados no centro, aplicando conceitos de POO e estruturas de dados eficientes em C++.
+Este projeto é um sistema de gestão de eventos acadêmicos desenvolvido para a disciplina de **Estrutura de Dados Orientada a Objetos** no Centro de Informática da UFPE. O sistema utiliza uma arquitetura **Full-stack**, integrando um backend robusto em C++ com uma interface Single Page Application (SPA) em React. O objetivo do projeto foi treinar os conceitos do paradigma de Programação Orientada a Objeto aprendidos em sala.
 
-## 🚀 Funcionalidades
+## 💻 O Sistema
 
-### Gestão de Atividades
-O sistema utiliza uma estrutura de herança para suportar diferentes tipos de eventos acadêmicos:
-* **Palestras:** Foco em apresentações com palestrantes convidados.
-* **Workshops:** Atividades práticas com lista de materiais e requisitos de software.
-* **Hackathons:** Competições de programação com gestão de premiação e validação de vagas por equipe.
+O **CIn-Events** permite que administradores gerenciem o ciclo de vida de eventos (Palestras, Workshops e Hackathons) e que alunos visualizem oportunidades de forma integrada.
 
-### Inscrições e Controle
-* **Gerenciamento de Participantes:** Cadastro e associação de participantes a atividades específicas.
-* **Lógica de Inscrição:** Sistema que valida se há vagas disponíveis antes de confirmar a participação.
-* **Persistência (Prevista):** Conexão com banco de dados para salvar os registros.
+### 🛠️ Funcionalidades Implementadas
 
-## 🛠️ Tecnologias e Conceitos de EDOO Aplicados
+* **Arquitetura Client-Server**: Comunicação via API REST utilizando o framework **Crow C++**.
+* **Persistência de Dados**: Integração com **SQLite** para armazenamento de atividades e **JSON** para persistência de usuários.
+* **Sistema de Autenticação**: 
+    * Login flexível para usuários (aceita E-mail ou Nome).
+    * **Modo Administrador**: Acesso restrito para criação, edição completa de todos os campos e exclusão de eventos.
+* **Interface Web Moderna**: 
+    * Desenvolvida em **React** com roteamento dinâmico via `react-router-dom`.
+    * Estética inspirada em terminais (Fonte *JetBrains Mono*) e identidade visual do CIn/UFPE.
+    * **Sistema de Notificações**: Pop-ups customizados (Modais e Toasts) para feedback de ações do sistema (CRUD e Auth).
+* **Gestão Dinâmica (CRUD)**: Edição em tempo real de atributos como título, data, vagas, horário e local diretamente nos cards da interface.
 
-O projeto demonstra a aplicação prática dos pilares de Programação Orientada a Objetos:
+## ⚙️ Tecnologias e Conceitos de EDOO
 
-1. **Abstração:** Uso da classe abstrata `Atividade` como interface comum.
-2. **Herança:** Especialização das subclasses `Palestra`, `Workshop` e `Hackathon`.
-3. **Polimorfismo Dinâmico:** Sobrescrita de métodos virtuais puros (`exibirDetalhes`), permitindo o processamento genérico de eventos via ponteiros da classe base.
-4. **Encapsulamento:** Proteção de dados sensíveis através de modificadores de acesso (`private` e `protected`).
-5. **Gestão de Memória:** Uso de vetores dinâmicos (`std::vector`) e destrutores virtuais para garantir a integridade da memória.
+O projeto aplica os pilares fundamentais de POO em um cenário real:
 
-## 📂 Estrutura do Projeto
+1.  **Abstração**: Uso da classe abstrata `Atividade` como interface comum para todos os eventos.
+2.  **Herança**: Especialização das subclasses `Palestra`, `Workshop` e `Hackathon`.
+3.  **Polimorfismo Dinâmico**: Sobrescrita de métodos virtuais como `getDescricaoExtra()` e `getTipo()`, permitindo o processamento genérico de eventos via ponteiros da classe base.
+4.  **Encapsulamento**: Proteção de dados através de modificadores de acesso e gerenciamento de estado no React.
 
-* **Linguagem:** C++
-* **Ferramentas:** VS Code, Git/GitHub (Fluxo de trabalho via Branches e Pull Requests).
-* **Organização:**
-    * `include/`: Ficheiros de cabeçalho (`.hpp`).
-    * `src/`: Implementações (`.cpp`).
+## 📂 Estrutura de Pastas
+
+* `include/`: Headers (`.hpp`) com as definições de classes.
+* `src/`: Implementações (`.cpp`) da lógica de negócio e rotas da API.
+* `data/`: Arquivos de persistência (`sistema.db` e `usuarios.json`).
+* `frontend/`: Código fonte da interface em React/Vite.
+
+## 🚀 Como Executar
+
+### Backend (C++)
+Na pasta `backend/`, abra um terminal e execute o seguinte comando:
+```bash
+g++ -I./include src/*.cpp -o cinevents -lsqlite3 && ./cinevents
+```
+
+### Frontend (React)
+Na pasta `frontend/`, abra outro terminal e execute os seguintes comandos:
+```bash
+npm install
+npm run dev
+```
 
 ## 👥 Equipe
 * Alex Lacava
@@ -39,6 +56,3 @@ O projeto demonstra a aplicação prática dos pilares de Programação Orientad
 * José Romildo
 * Maria Cláudia
 * Wallyson Silva
-
----
-*Projeto desenvolvido como parte da avaliação da disciplina CIN0135 - EDOO.*
