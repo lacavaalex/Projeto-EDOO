@@ -33,7 +33,7 @@ function TelaLogin({ setUsuarioLogado }) {
       if (res.ok) {
         const data = await res.json();
         if (tipo === 'cadastro') {
-          alert("Usuário registrado com sucesso!");
+          mostrarAlerta("✅ USUÁRIO_REGISTRADO_COM_SUCESSO");
           setAba('login');
         } else {
           setUsuarioLogado(data);
@@ -41,10 +41,10 @@ function TelaLogin({ setUsuarioLogado }) {
           navigate('/');
         }
       } else {
-        alert("Erro na autenticação. Verifique suas credenciais.");
+        mostrarAlerta("❌ ERRO_NA_AUTENTICAÇÃO");
       }
     } catch (err) {
-      alert("Erro ao conectar com o servidor C++.");
+      mostrarAlerta("⚠️ ERRO_DE_CONEXÃO_COM_SERVIDOR");
     }
   };
 
@@ -180,7 +180,7 @@ function App() {
       body: JSON.stringify(payload),
     }).then(res => { 
       if (res.ok) { 
-        setMensagem("✅ EVENTO_GRAVADO_COM_SUCESSO");
+        mostrarAlerta("✅ EVENTO_GRAVADO_COM_SUCESSO");
         setTimeout(() => setMensagem(""), 3000);
         carregarAtividades(); 
       } 
@@ -189,7 +189,22 @@ function App() {
 
   const handleDelete = (id) => {
     if (!window.confirm("Deseja apagar?")) return;
-    fetch(`${API}/deletar_atividade/${id}`, { method: 'DELETE' }).then(res => { if (res.ok) carregarAtividades(); });
+    
+    fetch(`${API}/deletar_atividade/${id}`, { 
+      method: 'DELETE' 
+    }).then(res => { 
+      if (res.ok) {
+        carregarAtividades();
+        setMensagem("🗑️ EVENTO_REMOVIDO_COM_SUCESSO");
+        setTimeout(() => setMensagem(""), 3000);
+      } else {
+        setMensagem("❌ ERRO_AO_REMOVER_EVENTO");
+        setTimeout(() => setMensagem(""), 3000);
+      }
+    }).catch(() => {
+      setMensagem("⚠️ SERVIDOR_OFFLINE");
+      setTimeout(() => setMensagem(""), 3000);
+    });
   };
 
   const handleUpdate = (id) => {
@@ -202,14 +217,33 @@ function App() {
     }).then(res => { 
       if (res.ok) { 
           setEditando(null); 
-          carregarAtividades(); 
-      } 
+          carregarAtividades();
+          setMensagem("✅ EVENTO_ATUALIZADO_COM_SUCESSO");
+        setTimeout(() => setMensagem(""), 3000);
+      } else {
+        setMensagem("❌ ERRO_AO_ATUALIZAR_EVENTO");
+        setTimeout(() => setMensagem(""), 3000); 
+        } 
     });
   };
 
   const logout = () => {
     localStorage.removeItem('sessao_ativa');
     setUsuarioLogado(null);
+  };
+
+  const mostrarAlerta = (texto) => {
+    setMensagem(texto);
+    setTimeout(() => setMensagem(""), 3000);
+  };
+
+  const handleInscricaoSimulada = (tituloEvento) => {
+    window.alert(`
+      Aqui ficaria o redirecionamento para a 
+      página detalhada do evento: 
+      "${tituloEvento}"
+
+      Clique em OK para continuar.`);
   };
 
   return (
@@ -235,14 +269,12 @@ function App() {
 
         <h1 style={{ color: CORES.cin }}>{`// CIn-Events_`}</h1>
 
-        {mensagem && (
-          <div style={{ position: 'fixed', top: '20px', right: '20px', background: CORES.cin, color: '#fff', padding: '15px', border: '2px solid #fff', boxShadow: '4px 4px 0px #000', zIndex: 1000 }}>
-            {mensagem}
+        {mensagem && ( <div style={{ position: 'fixed', top: '20px', right: '20px', background: CORES.cin, color: '#fff', padding: '15px 25px', border: '2px solid #fff', boxShadow: '8px 8px 0px #000', zIndex: 2000, fontFamily: CORES.fonte, fontWeight: 'bold', fontSize: '14px', letterSpacing: '1px' }}> {`> ${mensagem}`}
           </div>
         )}
 
         <Routes>
-          <Route path="/login" element={<TelaLogin setUsuarioLogado={setUsuarioLogado} />} />
+          <Route path="/login" element={<TelaLogin setUsuarioLogado={setUsuarioLogado} mostrarAlerta={mostrarAlerta} />} />
           
           <Route path="/" element={
             <div style={{ display: 'grid', gap: '20px', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))' }}>
@@ -282,18 +314,17 @@ function App() {
                     )}
                   </div>
 
-                    {usuarioLogado?.email === 'admin' && (
+                  <div style={{ marginTop: '20px', display: 'flex', gap: '10px', borderTop: '1px solid #eee', paddingTop: '10px' }}>
+                    {usuarioLogado?.email === 'admin' ? (
                       editando?.id === atv.id ? (
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%', background: '#f0f0f0', padding: '10px', borderRadius: '4px' }}>
                           <span style={{fontSize: '10px', fontWeight: 'bold'}}>{`// EDITANDO_ID: ${atv.id}`}</span>
-                          
                           <input 
                             placeholder="Título"
                             value={editando.titulo} 
                             onChange={e => setEditando({...editando, titulo: e.target.value})} 
                             style={{fontFamily: CORES.fonte, padding: '5px', border: `1px solid ${CORES.cin}`}}
                           />
-                          
                           <div style={{ display: 'flex', gap: '5px' }}>
                             <input 
                               placeholder="Data Evento"
@@ -314,32 +345,6 @@ function App() {
                               style={{fontFamily: CORES.fonte, padding: '5px', width: '70px'}}
                             />
                           </div>
-
-                          <div style={{ display: 'flex', gap: '5px' }}>
-                            <input 
-                              placeholder="Início Inscrição"
-                              value={editando.dataInicio} 
-                              onChange={e => {
-                                let val = e.target.value.replace(/\D/g, "");
-                                if (val.length > 2 && val.length <= 4) val = `${val.slice(0, 2)}/${val.slice(2)}`;
-                                else if (val.length > 4) val = `${val.slice(0, 2)}/${val.slice(2, 4)}/${val.slice(4, 8)}`;
-                                setEditando({...editando, dataInicio: val.slice(0, 10)});
-                              }} 
-                              style={{fontFamily: CORES.fonte, padding: '5px', flex: 1, fontSize: '12px'}}
-                            />
-                            <input 
-                              placeholder="Fim Inscrição"
-                              value={editando.dataFim} 
-                              onChange={e => {
-                                let val = e.target.value.replace(/\D/g, "");
-                                if (val.length > 2 && val.length <= 4) val = `${val.slice(0, 2)}/${val.slice(2)}`;
-                                else if (val.length > 4) val = `${val.slice(0, 2)}/${val.slice(2, 4)}/${val.slice(4, 8)}`;
-                                setEditando({...editando, dataFim: val.slice(0, 10)});
-                              }} 
-                              style={{fontFamily: CORES.fonte, padding: '5px', flex: 1, fontSize: '12px'}}
-                            />
-                          </div>
-
                           {atv.tipo !== 'Hackathon' && (
                             <input 
                               placeholder="Horário (hh:mm)"
@@ -352,24 +357,29 @@ function App() {
                               style={{fontFamily: CORES.fonte, padding: '5px'}}
                             />
                           )}
-                          
                           <div style={{ display: 'flex', gap: '5px', marginTop: '5px' }}>
-                            <button onClick={() => handleUpdate(atv.id)} style={{ flex: 1, background: 'green', color: 'white', border: 'none', padding: '8px', cursor: 'pointer', fontWeight: 'bold' }}>SALVAR</button>
-                            <button onClick={() => setEditando(null)} style={{ flex: 1, background: '#ccc', border: 'none', padding: '8px', cursor: 'pointer' }}>CANCELAR</button>
+                            <button onClick={() => handleUpdate(atv.id)} style={{ flex: 1, background: 'green', color: 'white', border: 'none', padding: '8px', cursor: 'pointer', fontWeight: 'bold', fontFamily: CORES.fonte }}>SALVAR</button>
+                            <button onClick={() => setEditando(null)} style={{ flex: 1, background: '#ccc', border: 'none', padding: '8px', cursor: 'pointer', fontFamily: CORES.fonte }}>CANCELAR</button>
                           </div>
                         </div>
                       ) : (
                         <>
-                          <button onClick={() => setEditando({ ...atv })} style={{ background: 'none', border: '1px solid #ccc', cursor: 'pointer', fontFamily: CORES.fonte, padding: '2px 8px' }}>
-                            editar
-                          </button>
-                          <button onClick={() => handleDelete(atv.id)} style={{ background: CORES.cin, color: '#fff', border: 'none', cursor: 'pointer', fontFamily: CORES.fonte, padding: '2px 8px' }}>
-                            deletar
-                          </button>
+                          <button onClick={() => setEditando({ ...atv })} style={{ background: 'none', border: '1px solid #ccc', cursor: 'pointer', fontFamily: CORES.fonte, padding: '2px 8px' }}>editar</button>
+                          <button onClick={() => handleDelete(atv.id)} style={{ background: CORES.cin, color: '#fff', border: 'none', cursor: 'pointer', fontFamily: CORES.fonte, padding: '2px 8px' }}>deletar</button>
                         </>
+                      )
+                    ) : (
+                      usuarioLogado && (
+                        <button 
+                          onClick={() => handleInscricaoSimulada(atv.titulo)} 
+                          style={{ background: '#000', color: '#fff', border: 'none', width: '100%', cursor: 'pointer', fontFamily: CORES.fonte, padding: '10px', fontWeight: 'bold' }}
+                        > 
+                          INSCREVER-SE
+                        </button>
                       )
                     )}
                   </div>
+                </div>
               ))}
             </div>
           } />
@@ -425,7 +435,7 @@ function App() {
                       )}
                     </div>
                   </div>
-                  <button type="submit" style={{ background: CORES.cin, color: '#fff', border: 'none', padding: '12px', cursor: 'pointer', fontFamily: CORES.fonte, fontWeight: 'bold' }}>EXEC_CADASTRAR</button>
+                  <button type="submit" style={{ background: CORES.cin, color: '#fff', border: 'none', padding: '12px', cursor: 'pointer', fontFamily: CORES.fonte, fontWeight: 'bold' }}>EXEC_CADASTRO</button>
                 </form>
               </div>
             ) : (
