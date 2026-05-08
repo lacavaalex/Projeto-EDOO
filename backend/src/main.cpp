@@ -117,16 +117,24 @@ int main() {
 
     CROW_ROUTE(app, "/api/atualizar_atividade/<int>").methods("PUT"_method)
     ([&dbManager](const crow::request& req, int id){
-        crow::response res;
         auto x = crow::json::load(req.body);
-        if (!x || !x.has("vagas")) { res.code = 400; return res; }
-        if (dbManager.atualizarCapacidade(id, x["vagas"].i())) {
-            res.code = 200;
-            res.body = "{\"ok\":true}";
+        if (!x) return crow::response(400, "{\"erro\":\"JSON invalido\"}");
+
+        // Captura os dados que vem do seu 'editando' do React
+        string titulo = x.has("titulo") ? string(x["titulo"].s()) : "";
+        string data = x.has("data") ? string(x["data"].s()) : "";
+        int vagas = x.has("vagas") ? x["vagas"].i() : 0;
+        
+        // Para o resto (horario, local, etc), como eles estao na descricao_extra:
+        // Voce pode montar a string aqui ou receber a 'descricao' ja formatada do React
+        string desc = x.has("descricao") ? string(x["descricao"].s()) : "";
+
+        // Precisamos de um método que atualize múltiplos campos
+        if (dbManager.atualizarAtividadeCompleta(id, titulo, data, vagas, desc)) {
+            return crow::response(200, "{\"status\":\"sucesso\"}");
         } else {
-            res.code = 500;
+            return crow::response(500, "{\"erro\":\"Falha ao atualizar no banco\"}");
         }
-        return res;
     });
 
     CROW_ROUTE(app, "/api/deletar_atividade/<int>").methods("DELETE"_method)

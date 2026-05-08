@@ -193,11 +193,18 @@ function App() {
   };
 
   const handleUpdate = (id) => {
+    const payload = { ...editando };
+    
     fetch(`${API}/atualizar_atividade/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ vagas: parseInt(editando.vagas) }),
-    }).then(res => { if (res.ok) { setEditando(null); carregarAtividades(); } });
+      body: JSON.stringify(payload),
+    }).then(res => { 
+      if (res.ok) { 
+          setEditando(null); 
+          carregarAtividades(); 
+      } 
+    });
   };
 
   const logout = () => {
@@ -275,29 +282,94 @@ function App() {
                     )}
                   </div>
 
-                  <div style={{ marginTop: '20px', display: 'flex', gap: '10px', borderTop: '1px solid #eee', paddingTop: '10px' }}>
-                    {usuarioLogado?.email === 'admin' ? (
+                    {usuarioLogado?.email === 'admin' && (
                       editando?.id === atv.id ? (
-                        <>
-                          <input type="number" value={editando.vagas} onChange={(e) => setEditando({ ...editando, vagas: e.target.value })} style={{ width: '60px', fontFamily: CORES.fonte }} />
-                          <button onClick={() => handleUpdate(atv.id)}>salvar</button>
-                          <button onClick={() => setEditando(null)}>cancelar</button>
-                        </>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%', background: '#f0f0f0', padding: '10px', borderRadius: '4px' }}>
+                          <span style={{fontSize: '10px', fontWeight: 'bold'}}>{`// EDITANDO_ID: ${atv.id}`}</span>
+                          
+                          <input 
+                            placeholder="Título"
+                            value={editando.titulo} 
+                            onChange={e => setEditando({...editando, titulo: e.target.value})} 
+                            style={{fontFamily: CORES.fonte, padding: '5px', border: `1px solid ${CORES.cin}`}}
+                          />
+                          
+                          <div style={{ display: 'flex', gap: '5px' }}>
+                            <input 
+                              placeholder="Data Evento"
+                              value={editando.data} 
+                              onChange={e => {
+                                let val = e.target.value.replace(/\D/g, "");
+                                if (val.length > 2 && val.length <= 4) val = `${val.slice(0, 2)}/${val.slice(2)}`;
+                                else if (val.length > 4) val = `${val.slice(0, 2)}/${val.slice(2, 4)}/${val.slice(4, 8)}`;
+                                setEditando({...editando, data: val.slice(0, 10)});
+                              }} 
+                              style={{fontFamily: CORES.fonte, padding: '5px', flex: 1}}
+                            />
+                            <input 
+                              type="number" 
+                              placeholder="Vagas"
+                              value={editando.vagas} 
+                              onChange={e => setEditando({...editando, vagas: e.target.value})} 
+                              style={{fontFamily: CORES.fonte, padding: '5px', width: '70px'}}
+                            />
+                          </div>
+
+                          <div style={{ display: 'flex', gap: '5px' }}>
+                            <input 
+                              placeholder="Início Inscrição"
+                              value={editando.dataInicio} 
+                              onChange={e => {
+                                let val = e.target.value.replace(/\D/g, "");
+                                if (val.length > 2 && val.length <= 4) val = `${val.slice(0, 2)}/${val.slice(2)}`;
+                                else if (val.length > 4) val = `${val.slice(0, 2)}/${val.slice(2, 4)}/${val.slice(4, 8)}`;
+                                setEditando({...editando, dataInicio: val.slice(0, 10)});
+                              }} 
+                              style={{fontFamily: CORES.fonte, padding: '5px', flex: 1, fontSize: '12px'}}
+                            />
+                            <input 
+                              placeholder="Fim Inscrição"
+                              value={editando.dataFim} 
+                              onChange={e => {
+                                let val = e.target.value.replace(/\D/g, "");
+                                if (val.length > 2 && val.length <= 4) val = `${val.slice(0, 2)}/${val.slice(2)}`;
+                                else if (val.length > 4) val = `${val.slice(0, 2)}/${val.slice(2, 4)}/${val.slice(4, 8)}`;
+                                setEditando({...editando, dataFim: val.slice(0, 10)});
+                              }} 
+                              style={{fontFamily: CORES.fonte, padding: '5px', flex: 1, fontSize: '12px'}}
+                            />
+                          </div>
+
+                          {atv.tipo !== 'Hackathon' && (
+                            <input 
+                              placeholder="Horário (hh:mm)"
+                              value={editando.horario} 
+                              onChange={e => {
+                                let val = e.target.value.replace(/\D/g, "");
+                                if (val.length > 2) val = `${val.slice(0, 2)}:${val.slice(2, 4)}`;
+                                setEditando({...editando, horario: val.slice(0, 5)});
+                              }} 
+                              style={{fontFamily: CORES.fonte, padding: '5px'}}
+                            />
+                          )}
+                          
+                          <div style={{ display: 'flex', gap: '5px', marginTop: '5px' }}>
+                            <button onClick={() => handleUpdate(atv.id)} style={{ flex: 1, background: 'green', color: 'white', border: 'none', padding: '8px', cursor: 'pointer', fontWeight: 'bold' }}>SALVAR</button>
+                            <button onClick={() => setEditando(null)} style={{ flex: 1, background: '#ccc', border: 'none', padding: '8px', cursor: 'pointer' }}>CANCELAR</button>
+                          </div>
+                        </div>
                       ) : (
                         <>
-                          <button onClick={() => setEditando({ id: atv.id, vagas: atv.vagas })} style={{ background: 'none', border: '1px solid #ccc', cursor: 'pointer', fontFamily: CORES.fonte, padding: '2px 8px' }}>editar</button>
-                          <button onClick={() => handleDelete(atv.id)} style={{ background: CORES.cin, color: '#fff', border: 'none', cursor: 'pointer', fontFamily: CORES.fonte, padding: '2px 8px' }}>deletar</button>
+                          <button onClick={() => setEditando({ ...atv })} style={{ background: 'none', border: '1px solid #ccc', cursor: 'pointer', fontFamily: CORES.fonte, padding: '2px 8px' }}>
+                            editar
+                          </button>
+                          <button onClick={() => handleDelete(atv.id)} style={{ background: CORES.cin, color: '#fff', border: 'none', cursor: 'pointer', fontFamily: CORES.fonte, padding: '2px 8px' }}>
+                            deletar
+                          </button>
                         </>
-                      )
-                    ) : (
-                      usuarioLogado && (
-                        <button style={{ background: '#000', color: '#fff', border: 'none', width: '100%', cursor: 'pointer', fontFamily: CORES.fonte, padding: '8px' }}>
-                          INSCREVER-SE
-                        </button>
                       )
                     )}
                   </div>
-                </div>
               ))}
             </div>
           } />

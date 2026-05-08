@@ -99,6 +99,17 @@ bool DatabaseManager::salvarAtividade(Atividade* a) {
     return executarSQL(sql);
 }
 
+bool DatabaseManager::atualizarAtividadeCompleta(int id, string titulo, string data, int vagas, string desc) {
+    string sql = "UPDATE atividades SET "
+                 "titulo = '" + titulo + "', "
+                 "data = '" + data + "', "
+                 "capacidade = " + to_string(vagas) + ", "
+                 "descricao_extra = '" + desc + "' "
+                 "WHERE id = " + to_string(id) + ";";
+    
+    return executarSQL(sql);
+}
+
 std::vector<Atividade*> DatabaseManager::listarAtividades() {
     std::vector<Atividade*> lista;
     string sql = "SELECT * FROM atividades;";
