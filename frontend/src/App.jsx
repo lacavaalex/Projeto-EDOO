@@ -7,11 +7,19 @@ const CORES = { cin: '#9e1b32', texto: '#1e1e1e', fonte: '"JetBrains Mono", mono
 // --- COMPONENTE DE LOGIN/CADASTRO ---
 function TelaLogin({ setUsuarioLogado }) {
   const [aba, setAba] = useState('escolha');
-  const [form, setForm] = useState({ nome: '', email: '', curso: '' });
+  const [form, setForm] = useState({ nome: '', email: '', curso: '', senha: '' });
   const navigate = useNavigate();
 
   const handleAuth = async (e, tipo) => {
     e.preventDefault();
+
+    if (tipo === 'login' && form.email === 'admin' && form.senha === 'adminadmin') {
+      const adminFake = { nome: 'Administrador', email: 'admin', curso: 'CIn' };
+      setUsuarioLogado(adminFake);
+      localStorage.setItem('sessao_ativa', JSON.stringify(adminFake));
+      navigate('/');
+      return;
+    }
 
     const rota = tipo === 'cadastro' ? '/api/auth/registrar' : '/api/auth/login';
     
@@ -25,18 +33,18 @@ function TelaLogin({ setUsuarioLogado }) {
       if (res.ok) {
         const data = await res.json();
         if (tipo === 'cadastro') {
-          alert("Usuário registrado no arquivo JSON!");
+          alert("Usuário registrado com sucesso!");
           setAba('login');
         } else {
           setUsuarioLogado(data);
-          localStorage.setItem('sessao_ativa', JSON.stringify(data)); // Mantém a sessão no navegador
+          localStorage.setItem('sessao_ativa', JSON.stringify(data));
           navigate('/');
         }
       } else {
-        alert("Erro na autenticação.");
+        alert("Erro na autenticação. Verifique suas credenciais.");
       }
     } catch (err) {
-      alert("Erro ao conectar com o servidor.");
+      alert("Erro ao conectar com o servidor C++.");
     }
   };
 
@@ -47,22 +55,71 @@ function TelaLogin({ setUsuarioLogado }) {
       {aba === 'escolha' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
           <h2 style={{ fontSize: '16px' }}>{`> identificar_usuario.sh`}</h2>
-          <button onClick={() => setAba('login')} style={{ padding: '15px', cursor: 'pointer', background: CORES.cin, color: '#fff', border: 'none', fontWeight: 'bold' }}>LOG_IN</button>
-          <button onClick={() => setAba('cadastro')} style={{ padding: '15px', cursor: 'pointer', background: '#fff', border: `2px solid ${CORES.cin}`, fontWeight: 'bold' }}>CADASTRAR_NOVO</button>
+          <button onClick={() => setAba('login')} style={{ padding: '15px', cursor: 'pointer', background: CORES.cin, color: '#fff', border: 'none', fontWeight: 'bold', fontFamily: CORES.fonte }}>LOG_IN</button>
+          <button onClick={() => setAba('cadastro')} style={{ padding: '15px', cursor: 'pointer', background: '#fff', border: `2px solid ${CORES.cin}`, fontWeight: 'bold', fontFamily: CORES.fonte }}>CADASTRAR_NOVO</button>
         </div>
       )}
 
       {(aba === 'login' || aba === 'cadastro') && (
         <form onSubmit={(e) => handleAuth(e, aba)} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <h2>{aba === 'login' ? '> login.exe' : '> novo_user.conf'}</h2>
-          {aba === 'cadastro' && <input placeholder="Nome Completo" onChange={e => setForm({...form, nome: e.target.value})} style={EstiloInput} required />}
-          <input placeholder="E-mail @cin" type="email" onChange={e => setForm({...form, email: e.target.value})} style={EstiloInput} required />
-          {aba === 'cadastro' && <input placeholder="Curso (Ex: Sistemas)" onChange={e => setForm({...form, curso: e.target.value})} style={EstiloInput} required />}
           
-          <button type="submit" style={{ background: CORES.cin, color: '#fff', padding: '10px', border: 'none', cursor: 'pointer' }}>
+          {aba === 'cadastro' && (
+            <>
+              <input 
+                placeholder="Nome Completo" 
+                onChange={e => setForm({...form, nome: e.target.value})} 
+                style={EstiloInput} 
+                required 
+              />
+              <input 
+                placeholder="E-mail @cin" 
+                type="email" 
+                onChange={e => setForm({...form, email: e.target.value})} 
+                style={EstiloInput} 
+                required 
+              />
+              <input 
+                placeholder="Curso (Ex: Sistemas)" 
+                onChange={e => setForm({...form, curso: e.target.value})} 
+                style={EstiloInput} 
+                required 
+              />
+              {/* NOVO CAMPO DE SENHA NO CADASTRO */}
+              <input 
+                placeholder="Crie uma Senha" 
+                type="password" 
+                onChange={e => setForm({...form, senha: e.target.value})} 
+                style={EstiloInput} 
+                required 
+              />
+            </>
+          )}
+
+          {aba === 'login' && (
+            <>
+              <input 
+                placeholder="E-mail ou Login" 
+                type="text" 
+                onChange={e => setForm({...form, email: e.target.value})} 
+                style={EstiloInput} 
+                required 
+              />
+              <input 
+                placeholder="Senha" 
+                type="password" 
+                onChange={e => setForm({...form, senha: e.target.value})} 
+                style={EstiloInput} 
+                required 
+              />
+            </>
+          )}
+          
+          <button type="submit" style={{ background: CORES.cin, color: '#fff', padding: '10px', border: 'none', cursor: 'pointer', fontFamily: CORES.fonte, fontWeight: 'bold' }}>
             {aba === 'login' ? 'ENTRAR' : 'FINALIZAR_CADASTRO'}
           </button>
-          <button type="button" onClick={() => setAba('escolha')} style={{ background: 'none', border: 'none', textDecoration: 'underline', fontSize: '12px', cursor: 'pointer' }}>voltar</button>
+          
+          <button type="button" onClick={() => setAba('escolha')} style={{ background: 'none', border: 'none', textDecoration: 'underline', fontSize: '12px', cursor: 'pointer', fontFamily: CORES.fonte }}>voltar</button>
         </form>
       )}
     </div>
@@ -76,7 +133,12 @@ function App() {
   const [erro, setErro] = useState(null);
   const [tipo, setTipo] = useState('Workshop');
   const [editando, setEditando] = useState(null);
-  const [formData, setFormData] = useState({ titulo: '', data: '', dataInicio: '', dataFim: '', horario: '', local: '', duracao: '', vagas: 0, materiais: '', requisitos: '', premiacao: '', tamanho_equipe: 5, palestrante: '', tema: '', edital: '' });
+  const [formData, setFormData] = useState({ 
+    titulo: '', data: '', data_inicio: '', data_fim: '', 
+    horario: '', local: '', duracao: '', vagas: 0, 
+    materiais: '', requisitos: '', premiacao: '', 
+    tamanho_equipe: 5, palestrante: '', tema: '', edital: '' 
+  });
   const [mensagem, setMensagem] = useState("");
 
   useEffect(() => {
@@ -99,11 +161,9 @@ function App() {
     }
 
     if (name === "horario" || name === "duracao") {
-    value = value.replace(/\D/g, "");
-    if (value.length > 2) {
-      value = `${value.slice(0, 2)}:${value.slice(2, 4)}`;
-    }
-    value = value.slice(0, 5);
+      value = value.replace(/\D/g, "");
+      if (value.length > 2) value = `${value.slice(0, 2)}:${value.slice(2, 4)}`;
+      value = value.slice(0, 5);
     }
 
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -151,7 +211,9 @@ function App() {
         <nav style={{ marginBottom: '20px', display: 'flex', justifyContent: 'space-between', borderBottom: `2px solid ${CORES.cin}`, paddingBottom: '10px' }}>
           <div style={{ display: 'flex', gap: '15px' }}>
             <Link to="/" style={{ textDecoration: 'none', color: CORES.cin, fontWeight: 'bold' }}>{`> EVENTOS`}</Link>
-            <Link to="/cadastro" style={{ textDecoration: 'none', color: CORES.cin, fontWeight: 'bold' }}>{`> CADASTRAR`}</Link>
+            {usuarioLogado?.email === 'admin' && (
+              <Link to="/cadastro" style={{ textDecoration: 'none', color: CORES.cin, fontWeight: 'bold' }}>{`> CADASTRAR`}</Link>
+            )}
           </div>
           
           {usuarioLogado ? (
@@ -189,33 +251,19 @@ function App() {
 
                     {atv.descricao && (
                       <div style={{ 
-                        marginTop: '15px', 
-                        padding: '15px', 
-                        background: '#fcfcfc', 
-                        border: `1px solid #eee`,
-                        borderLeft: `5px solid ${CORES.cin}`,
+                        marginTop: '15px', padding: '15px', background: '#fcfcfc', 
+                        border: `1px solid #eee`, borderLeft: `5px solid ${CORES.cin}`,
                         boxShadow: 'inset 2px 2px 5px rgba(0,0,0,0.02)'
                       }}>
-                        <span style={{ 
-                          color: CORES.cin, 
-                          fontWeight: 'bold', 
-                          display: 'block', 
-                          marginBottom: '10px',
-                          fontSize: '11px',
-                          letterSpacing: '1px'
-                        }}>
+                        <span style={{ color: CORES.cin, fontWeight: 'bold', display: 'block', marginBottom: '10px', fontSize: '11px', letterSpacing: '1px' }}>
                           {`// especificacoes_`}
                         </span>
                         
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                           {atv.descricao.split(' | ').map((info, index) => (
                             <div key={index} style={{ 
-                              display: 'flex', 
-                              alignItems: 'baseline', 
-                              gap: '10px',
-                              fontSize: '14px',
-                              color: '#333',
-                              borderBottom: '1px dashed #efefef',
+                              display: 'flex', alignItems: 'baseline', gap: '10px',
+                              fontSize: '14px', color: '#333', borderBottom: '1px dashed #efefef',
                               paddingBottom: '4px'
                             }}>
                               <span style={{ color: CORES.cin, fontWeight: 'bold' }}>►</span>
@@ -224,22 +272,29 @@ function App() {
                           ))}
                         </div>
                       </div>
-)}
+                    )}
                   </div>
 
                   <div style={{ marginTop: '20px', display: 'flex', gap: '10px', borderTop: '1px solid #eee', paddingTop: '10px' }}>
-                    {editando?.id === atv.id ? (
-                      <>
-                        <input type="number" value={editando.vagas} onChange={(e) => setEditando({ ...editando, vagas: e.target.value })} style={{ width: '60px', fontFamily: CORES.fonte }} />
-                        <button onClick={() => handleUpdate(atv.id)}>salvar</button>
-                        <button onClick={() => setEditando(null)}>cancelar</button>
-                      </>
+                    {usuarioLogado?.email === 'admin' ? (
+                      editando?.id === atv.id ? (
+                        <>
+                          <input type="number" value={editando.vagas} onChange={(e) => setEditando({ ...editando, vagas: e.target.value })} style={{ width: '60px', fontFamily: CORES.fonte }} />
+                          <button onClick={() => handleUpdate(atv.id)}>salvar</button>
+                          <button onClick={() => setEditando(null)}>cancelar</button>
+                        </>
+                      ) : (
+                        <>
+                          <button onClick={() => setEditando({ id: atv.id, vagas: atv.vagas })} style={{ background: 'none', border: '1px solid #ccc', cursor: 'pointer', fontFamily: CORES.fonte, padding: '2px 8px' }}>editar</button>
+                          <button onClick={() => handleDelete(atv.id)} style={{ background: CORES.cin, color: '#fff', border: 'none', cursor: 'pointer', fontFamily: CORES.fonte, padding: '2px 8px' }}>deletar</button>
+                        </>
+                      )
                     ) : (
-                      <>
-                        <button onClick={() => setEditando({ id: atv.id, vagas: atv.vagas })} style={{ background: 'none', border: '1px solid #ccc', cursor: 'pointer', fontFamily: CORES.fonte, padding: '2px 8px' }}>editar</button>
-                        <button onClick={() => handleDelete(atv.id)} style={{ background: CORES.cin, color: '#fff', border: 'none', cursor: 'pointer', fontFamily: CORES.fonte, padding: '2px 8px' }}>deletar</button>
-                        {usuarioLogado && <button style={{ background: '#000', color: '#fff', border: 'none', cursor: 'pointer', fontFamily: CORES.fonte, padding: '2px 8px' }}>inscrever-se</button>}
-                      </>
+                      usuarioLogado && (
+                        <button style={{ background: '#000', color: '#fff', border: 'none', width: '100%', cursor: 'pointer', fontFamily: CORES.fonte, padding: '8px' }}>
+                          INSCREVER-SE
+                        </button>
+                      )
                     )}
                   </div>
                 </div>
@@ -248,7 +303,7 @@ function App() {
           } />
 
           <Route path="/cadastro" element={
-            usuarioLogado ? (
+            usuarioLogado?.email === 'admin' ? (
               <div style={{ maxWidth: '500px' }}>
                 <h2 style={{ fontSize: '18px' }}>{`> novo_cadastro.sh`}</h2>
                 <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px', border: `1px solid ${CORES.cin}`, padding: '20px', boxShadow: `4px 4px 0px ${CORES.cin}` }}>
@@ -260,30 +315,20 @@ function App() {
                   <input name="titulo" placeholder="Título do Evento *" onChange={handleChange} required style={{ padding: '8px' }} />
                   <input name="data" placeholder="Data (dd/mm/aaaa) *" value={formData.data} onChange={handleChange} required style={{ padding: '8px' }} />
                   <div style={{ display: 'flex', gap: '10px' }}>
-                    <input 
-                      name="data_inicio" 
-                      placeholder="Início Inscrições *" 
-                      value={formData.data_inicio} 
-                      onChange={handleChange} 
-                      required 
-                      style={{ padding: '8px', flex: 1 }} 
-                    />
-                    <input 
-                      name="data_fim" 
-                      placeholder="Fim Inscrições *" 
-                      value={formData.data_fim} 
-                      onChange={handleChange} 
-                      required 
-                      style={{ padding: '8px', flex: 1 }} 
-                    />
+                    <input name="data_inicio" placeholder="Início Inscrições *" value={formData.data_inicio} onChange={handleChange} required style={{ padding: '8px', flex: 1 }} />
+                    <input name="data_fim" placeholder="Fim Inscrições *" value={formData.data_fim} onChange={handleChange} required style={{ padding: '8px', flex: 1 }} />
                   </div>
+                  
                   {tipo !== 'Hackathon' && (
                     <>
-                      <input name="horario" placeholder="Horário *" value={formData.horario} onChange={handleChange} required style={{ padding: '8px' }} />
+                      <input name="horario" placeholder="Horário (hh:mm) *" value={formData.horario} onChange={handleChange} required style={{ padding: '8px' }} />
                       <input name="local" placeholder="Local *" value={formData.local} onChange={handleChange} required style={{ padding: '8px' }} />
-                      <input name="duracao" placeholder="Duração *" value={formData.duracao} onChange={handleChange} required style={{ padding: '8px' }} />
+                      <input name="duracao" placeholder="Duração (hh:mm) *" value={formData.duracao} onChange={handleChange} required style={{ padding: '8px' }} />
                     </>
                   )}
+                  
+                  <input name="vagas" type="number" placeholder="Limite de Vagas *" onChange={handleChange} required style={{ padding: '8px' }} />
+
                   <div style={{ padding: '10px', background: '#eee', marginTop: '5px' }}>
                     <span style={{ fontSize: '11px', fontWeight: 'bold' }}>DETALHES ESPECÍFICOS:</span>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px' }}>
@@ -313,8 +358,8 @@ function App() {
               </div>
             ) : (
               <div style={{ textAlign: 'center', marginTop: '50px' }}>
-                <p>Acesso negado. Por favor, faça login para cadastrar eventos.</p>
-                <Link to="/login">Ir para Login</Link>
+                <p>Acesso Restrito: Apenas administradores podem gerenciar eventos.</p>
+                <Link to="/">Voltar para Home</Link>
               </div>
             )
           } />

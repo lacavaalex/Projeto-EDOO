@@ -40,37 +40,28 @@ int main() {
 
     crow::App<CORSMiddleware> app;
 
+
     CROW_ROUTE(app, "/api/auth/registrar").methods("POST"_method)
-([](const crow::request& req){
+    ([](const crow::request& req){
     auto novo_user = crow::json::load(req.body);
     if (!novo_user) return crow::response(400);
 
     crow::json::wvalue usuarios_lista;
-    
     ifstream i("./data/usuarios.json");
     if (i.is_open()) {
-        // Lendo o arquivo inteiro para uma string
         string conteudo((istreambuf_iterator<char>(i)), istreambuf_iterator<char>());
         i.close();
-
         if (!conteudo.empty()) {
             auto atual = crow::json::load(conteudo);
-            if (atual) {
-                usuarios_lista = std::move(atual);
-            } else {
-                usuarios_lista = crow::json::wvalue::list();
-            }
-        } else {
-            usuarios_lista = crow::json::wvalue::list();
+            if (atual) usuarios_lista = std::move(atual);
         }
-    } else {
-        usuarios_lista = crow::json::wvalue::list();
     }
 
     int size = usuarios_lista.size();
     usuarios_lista[size]["nome"] = string(novo_user["nome"].s());
     usuarios_lista[size]["email"] = string(novo_user["email"].s());
     usuarios_lista[size]["curso"] = string(novo_user["curso"].s());
+    usuarios_lista[size]["senha"] = string(novo_user["senha"].s()); // SALVANDO A SENHA
 
     ofstream o("./data/usuarios.json");
     o << usuarios_lista.dump();
@@ -80,21 +71,24 @@ int main() {
 });
 
     CROW_ROUTE(app, "/api/auth/login").methods("POST"_method)
-([](const crow::request& req){
+    ([](const crow::request& req){
     auto login_data = crow::json::load(req.body);
     if (!login_data) return crow::response(400);
 
-    ifstream i("./data/usuarios.json");
-    if (!i.is_open()) return crow::response(401, "{\"erro\":\"Arquivo nao encontrado\"}");
+    string identificador = string(login_data["email"].s());
+    string senha_digitada = string(login_data["senha"].s());
 
+    ifstream i("./data/usuarios.json");
+    if (!i.is_open()) return crow::response(401, "{\"erro\":\"Banco de usuarios offline\"}");
+    
     string conteudo((istreambuf_iterator<char>(i)), istreambuf_iterator<char>());
     i.close();
 
-    if (conteudo.empty()) return crow::response(401, "{\"erro\":\"Nenhum usuario cadastrado\"}");
-
     auto usuarios = crow::json::load(conteudo);
     for (auto& u : usuarios) {
-        if (u["email"].s() == login_data["email"].s()) {
+        bool matchIdentificador = (u["email"].s() == identificador || u["nome"].s() == identificador);
+        
+        if (matchIdentificador && u["senha"].s() == senha_digitada) {
             crow::json::wvalue res;
             res["nome"] = string(u["nome"].s());
             res["email"] = string(u["email"].s());
@@ -102,7 +96,7 @@ int main() {
             return crow::response(200, res);
         }
     }
-    return crow::response(401, "{\"erro\":\"Usuario nao encontrado\"}");
+    return crow::response(401, "{\"erro\":\"Usuario ou senha incorretos\"}");
 });
 
     CROW_ROUTE(app, "/api/atividades").methods("GET"_method)
