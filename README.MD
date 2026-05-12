@@ -42,7 +42,7 @@ Na pasta `backend/`, abra um terminal e execute o seguinte comando:
 ```bash
 g++ -I./include src/*.cpp -o cinevents -lsqlite3 && ./cinevents
 ```
-Se a rota acima não funcionar (o que é bem comum se você estiver em outro sistema operacional, como o Windows), tente fazer por este outro caminho. Abra o **Prompt de Comando (CMD)** ou o **Git Bash** e utilize o comando abaixo, que já inclui as bibliotecas de rede nativas do sistema para a compilação:
+Se a rota acima não funcionar, tente fazer por este outro caminho. Abra o **Prompt de Comando (CMD)** ou o **Git Bash** e utilize o comando abaixo, que já inclui as bibliotecas de rede nativas do sistema para a compilação:
 ```cmd
 g++ -I./include src/*.cpp -o cinevents -lsqlite3 -lws2_32 -lmswsock && cinevents.exe
 ```
