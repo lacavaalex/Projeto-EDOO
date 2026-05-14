@@ -13,9 +13,7 @@ private:
     std::vector<std::string> stackTecnologica;
 
 public:
-    Hackathon(std::string t, std::string d, int cap, std::string prem, int tam, std::string edital);
-
-    void exibirDetalhes() const override;
+    Hackathon(std::string t, std::string d, std::string di, std::string df, int cap, std::string prem, int tam, std::string edital);
 
     void adicionarTecnologia(std::string tech);
     bool ehEventoPro() const; 

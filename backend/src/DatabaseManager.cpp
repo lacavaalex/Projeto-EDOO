@@ -4,8 +4,6 @@
 #include "../include/Workshop.hpp"
 #include "../include/Hackathon.hpp"
 #include "../include/Palestra.hpp"
-#include "../include/Clube.hpp"   
-#include "../include/Estagio.hpp" 
 #include <iostream>
 #include <string>
 #include <vector>
@@ -89,12 +87,26 @@ bool DatabaseManager::salvarParticipante(Participante* p) {
 }
 
 bool DatabaseManager::salvarAtividade(Atividade* a) {
+    string periodo = "Inscrições: " + a->getDataInicio() + " até " + a->getDataFim() + " | ";
+    string infoCompleta = periodo + a->getDescricaoExtra();
+
     string sql = "INSERT INTO atividades (titulo, data, capacidade, tipo, descricao_extra) VALUES ('" 
                  + a->getTitulo() + "', '" 
                  + a->getData() + "', " 
                  + to_string(a->getCapacidade()) + ", '" 
                  + a->getTipo() + "', '"
-                 + a->getDescricaoExtra() + "');"; 
+                 + infoCompleta + "');";    
+    return executarSQL(sql);
+}
+
+bool DatabaseManager::atualizarAtividadeCompleta(int id, string titulo, string data, int vagas, string desc) {
+    string sql = "UPDATE atividades SET "
+                 "titulo = '" + titulo + "', "
+                 "data = '" + data + "', "
+                 "capacidade = " + to_string(vagas) + ", "
+                 "descricao_extra = '" + desc + "' "
+                 "WHERE id = " + to_string(id) + ";";
+    
     return executarSQL(sql);
 }
 
@@ -120,15 +132,11 @@ std::vector<Atividade*> DatabaseManager::listarAtividades() {
         Atividade* a = nullptr;
         
         if (tipo == "Workshop") {
-        a = new Workshop(titulo, data, capacidade, descExtra, "");
-        } else if (tipo == "Clube") {
-            a = new Clube(titulo, data, capacidade, "", descExtra);
-        } else if (tipo == "Estagio") {
-            a = new Estagio(titulo, data, capacidade, 0.0, descExtra);
+        a = new Workshop(titulo, data, "", "", capacidade, descExtra, "", "", "", ""); 
         } else if (tipo == "Hackathon") {
-            a = new Hackathon(titulo, data, capacidade, descExtra, 0, "");
+            a = new Hackathon(titulo, data, "", "", capacidade, descExtra, 0, "");
         } else if (tipo == "Palestra") {
-            a = new Palestra(titulo, data, capacidade, descExtra, "");
+            a = new Palestra(titulo, data, "", "", capacidade, descExtra, "", "", "", "");
         }
 
         if (a) {

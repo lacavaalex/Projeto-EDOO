@@ -19,6 +19,11 @@ inline std::string atividadeParaJSON(Atividade* a) {
     json += "\"id\":"         + std::to_string(a->getId())            + ",";
     json += "\"titulo\":\""   + escapeJSON(a->getTitulo())            + "\",";
     json += "\"data\":\""     + escapeJSON(a->getData())              + "\",";
+    json += "\"dataInicio\":\"" + a->getDataInicio() + "\",";
+    json += "\"dataFim\":\"" + a->getDataFim() + "\",";
+    json += "\"horario\":\"" + a->getHorario() + "\",";
+    json += "\"local\":\"" + a->getLocal() + "\",";
+    json += "\"duracao\":\"" + a->getDuracao() + "\",";
     json += "\"vagas\":"      + std::to_string(a->getCapacidade())    + ",";
     json += "\"tipo\":\""     + escapeJSON(a->getTipo())              + "\",";
     json += "\"descricao\":\"" + escapeJSON(a->getDescricaoExtra())   + "\"";
