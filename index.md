@@ -1,116 +1,219 @@
-<div style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 1100px; margin: 0 auto; color: #1a1a1a; background: #fff; line-height: 1.8;">
+---
+layout: default
+title: CIn-Events — Gestão de Eventos do CIn/UFPE
+description: Sistema full-stack para gerenciamento de eventos acadêmicos do Centro de Informática da UFPE, desenvolvido com C++ e React.
+---
 
-  <header style="text-align: center; padding: 120px 20px; background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%); border-bottom: 5px solid #701c1c;">
-    <img src="https://raw.githubusercontent.com/lacavaalex/Projeto-EDOO/main/src/WhatsApp%20Image%202026-05-07%20at%2016.35.57.jpeg" alt="CIn-Events Logo" style="width: 260px; margin-bottom: 40px; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.1);">
-    <h1 style="font-size: 5rem; font-weight: 900; color: #701c1c; margin: 0; letter-spacing: -4px; line-height: 0.9;">CIn-Events</h1>
-    <p style="font-size: 1.7rem; color: #555; max-width: 900px; margin: 30px auto 50px; font-weight: 300; line-height: 1.4;">
-      Sistema de alta performance para gestão de eventos acadêmicos, integrando a robustez do <strong>C++</strong> com a reatividade do <strong>React</strong>.
-    </p>
-    
-    <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
-      <a href="https://github.com/lacavaalex/Projeto-EDOO" style="background: #1a1a1a; color: white; padding: 20px 40px; border-radius: 8px; text-decoration: none; font-weight: 800; letter-spacing: 1px;">REPOSITÓRIO GITHUB</a>
-      <a href="https://raw.githubusercontent.com/lacavaalex/Projeto-EDOO/main/src/Relat%C3%B3rio%20EDOO%20-%20CInEvents.pdf" style="background: #701c1c; color: white; padding: 20px 40px; border-radius: 8px; text-decoration: none; font-weight: 800; letter-spacing: 1px;">DOCUMENTAÇÃO PDF</a>
-    </div>
-  </header>
+<style>
+  /* Reset e Base */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #0d1117;
+    color: #e6edf3;
+    line-height: 1.7;
+  }
+  a { color: #58a6ff; text-decoration: none; }
+  a:hover { text-decoration: underline; }
 
-  <section style="padding: 100px 20px;">
-    <h2 style="font-size: 3rem; color: #1a1a1a; margin-bottom: 50px; border-left: 15px solid #701c1c; padding-left: 30px; letter-spacing: -2px;">Engenharia do Sistema</h2>
-    <p style="font-size: 1.4rem; color: #444; text-align: justify; margin-bottom: 60px; max-width: 950px;">
-      O <strong>CIn-Events</strong> foi desenvolvido sob o paradigma de arquitetura <strong>Client-Server</strong> distribuída. O motor central (Backend) opera em <b>C++</b> nativo para garantir processamento de baixa latência em operações críticas de banco de dados, enquanto a interface (Frontend) provê uma experiência de usuário fluida através de uma <b>Single Page Application (SPA)</b>.
-    </p>
-    
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 40px;">
-      <div style="background: #fafafa; padding: 50px; border-radius: 24px; border: 1px solid #eee;">
-        <h3 style="color: #701c1c; font-size: 2rem; margin-top: 0; margin-bottom: 25px;">Backend & Core</h3>
-        <ul style="color: #333; font-size: 1.1rem; list-style: none; padding: 0;">
-          <li style="margin-bottom: 15px;">🚀 <strong>Crow Framework:</strong> Micro-framework C++ para roteamento de APIs REST de alta velocidade.</li>
-          <li style="margin-bottom: 15px;">💾 <strong>Persistência Híbrida:</strong> Uso de SQLite para eventos complexos e JSON para credenciais de usuários.</li>
-          <li style="margin-bottom: 15px;">🛡️ <strong>Integridade de Dados:</strong> Validação rigorosa de conflitos de horários e lotação de vagas.</li>
-        </ul>
-      </div>
-      <div style="background: #fafafa; padding: 50px; border-radius: 24px; border: 1px solid #eee;">
-        <h3 style="color: #701c1c; font-size: 2rem; margin-top: 0; margin-bottom: 25px;">Frontend & UX</h3>
-        <ul style="color: #333; font-size: 1.1rem; list-style: none; padding: 0;">
-          <li style="margin-bottom: 15px;">⚛️ <strong>React Engine:</strong> Interface modular com gerenciamento de estado reativo.</li>
-          <li style="margin-bottom: 15px;">⚡ <strong>CRUD Dinâmico:</strong> Manipulação imediata de eventos (Criar, Editar, Excluir) via UI.</li>
-          <li style="margin-bottom: 15px;">🎨 <strong>Identidade CIn:</strong> Tipografia JetBrains Mono e paleta institucional da UFPE.</li>
-        </ul>
-      </div>
-    </div>
-  </section>
+  /* ── Hero ── */
+  .hero {
+    background: linear-gradient(135deg, #0d1117 0%, #1a2234 50%, #0d2137 100%);
+    border-bottom: 1px solid #21262d;
+    padding: 80px 24px 60px;
+    text-align: center;
+    position: relative;
+  }
+  .hero-logo {
+    width: 220px;
+    max-width: 65vw;
+    margin: 0 auto 30px;
+    display: block;
+    filter: drop-shadow(0 4px 24px rgba(31,111,235,0.3));
+    border-radius: 12px;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(31,111,235,0.15);
+    border: 1px solid rgba(31,111,235,0.4);
+    color: #58a6ff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 15px;
+    border-radius: 20px;
+    margin-bottom: 25px;
+  }
+  .hero h1 {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #fff 0%, #58a6ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero-subtitle {
+    font-size: 1.2rem;
+    color: #8b949e;
+    max-width: 700px;
+    margin: 0 auto 40px;
+    font-weight: 300;
+  }
 
-  <section style="background: #000; padding: 120px 20px; color: #fff; text-align: center; border-radius: 60px; margin: 0 10px;">
-    <h2 style="font-size: 3.5rem; margin-bottom: 20px; letter-spacing: -2px;">Visualização Técnica</h2>
-    <p style="color: #888; font-size: 1.3rem; margin-bottom: 100px;">Integração em tempo real entre o Servidor C++ e a Interface Administrativa.</p>
-    
-    <div style="display: flex; flex-direction: column; gap: 120px; align-items: center;">
-      <div style="max-width: 1000px;">
-        <p style="color: #701c1c; font-weight: 900; letter-spacing: 4px; margin-bottom: 30px; font-size: 1.3rem;">DASHBOARD DE CONTROLE</p>
-        <img src="https://raw.githubusercontent.com/lacavaalex/Projeto-EDOO/main/src/Captura%20de%20tela%20de%202026-05-14%2017-42-49.png" alt="Admin Dashboard" style="width: 100%; border-radius: 20px; border: 1px solid #333; box-shadow: 0 40px 100px rgba(112,28,28,0.25);">
-      </div>
+  /* ── Buttons ── */
+  .cta-group { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; }
+  .btn {
+    padding: 14px 28px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .btn-primary { background: #1f6feb; color: #fff; }
+  .btn-primary:hover { background: #388bfd; text-decoration: none; transform: translateY(-2px); }
+  .btn-pdf { background: #701c1c; color: #fff; }
+  .btn-pdf:hover { background: #a02828; text-decoration: none; transform: translateY(-2px); }
 
-      <div style="max-width: 1000px;">
-        <p style="color: #701c1c; font-weight: 900; letter-spacing: 4px; margin-bottom: 30px; font-size: 1.3rem;">CORE ENGINE (API REST)</p>
-        <img src="https://raw.githubusercontent.com/lacavaalex/Projeto-EDOO/main/src/Captura%20de%20tela%20de%202026-05-14%2017-42-21.png" alt="Backend Terminal" style="width: 100%; border-radius: 20px; border: 1px solid #333; box-shadow: 0 40px 100px rgba(112,28,28,0.25);">
-      </div>
-    </div>
-  </section>
+  /* ── Sections ── */
+  .section { max-width: 1000px; margin: 0 auto; padding: 80px 24px; }
+  .section-dark { background: #161b22; border-top: 1px solid #21262d; border-bottom: 1px solid #21262d; }
+  .section-title { font-size: 2rem; font-weight: 800; color: #fff; margin-bottom: 10px; letter-spacing: -1px; }
+  .section-subtitle { color: #8b949e; margin-bottom: 40px; font-size: 1.1rem; }
 
-  <section style="padding: 120px 20px; text-align: center;">
-    <h2 style="font-size: 3rem; margin-bottom: 80px; letter-spacing: -2px;">Aplicação dos Pilares POO</h2>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px;">
-      <div style="padding: 40px; border-bottom: 6px solid #701c1c; background: #fcfcfc;">
-        <h4 style="font-size: 1.5rem; margin-bottom: 15px;">Abstração</h4>
-        <p style="color: #666;">Modelagem da classe base <code>Atividade</code> como interface para o ecossistema.</p>
-      </div>
-      <div style="padding: 40px; border-bottom: 6px solid #701c1c; background: #fcfcfc;">
-        <h4 style="font-size: 1.5rem; margin-bottom: 15px;">Herança</h4>
-        <p style="color: #666;">Extensões especializadas: <code>Palestra</code>, <code>Workshop</code> e <code>Hackathon</code>.</p>
-      </div>
-      <div style="padding: 40px; border-bottom: 6px solid #701c1c; background: #fcfcfc;">
-        <h4 style="font-size: 1.5rem; margin-bottom: 15px;">Polimorfismo</h4>
-        <p style="color: #666;">Métodos virtuais para comportamento dinâmico em tempo de execução.</p>
-      </div>
-      <div style="padding: 40px; border-bottom: 6px solid #701c1c; background: #fcfcfc;">
-        <h4 style="font-size: 1.5rem; margin-bottom: 15px;">Encapsulamento</h4>
-        <p style="color: #666;">Segurança de dados através de modificadores de acesso e setters validados.</p>
-      </div>
-    </div>
-  </section>
+  /* ── Screenshots ── */
+  .screenshot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+  .screenshot-card { background: #0d1117; border: 1px solid #30363d; border-radius: 12px; overflow: hidden; transition: 0.3s; }
+  .screenshot-card:hover { border-color: #58a6ff; }
+  .screenshot-card img { width: 100%; display: block; border-bottom: 1px solid #30363d; }
+  .screenshot-label { padding: 15px; font-size: 0.85rem; color: #8b949e; font-weight: 600; text-align: center; }
 
-  <footer style="padding: 100px 20px; background: #f9f9f9; border-top: 1px solid #eee;">
-    <h2 style="text-align: center; font-size: 2.8rem; margin-bottom: 70px; letter-spacing: -1px;">Membros da Equipe</h2>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto;">
-      
-      <div style="text-align: center; background: #fff; padding: 40px 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05);">
-        <strong style="display: block; font-size: 1.4rem; margin-bottom: 10px;">Alex Lacava</strong>
-        <span style="color: #701c1c; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Product Owner & Backend</span>
-      </div>
+  /* ── Features ── */
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+  .feature-card { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 30px; transition: 0.3s; }
+  .feature-card:hover { border-color: #58a6ff; background: #1c2333; }
+  .feature-icon { font-size: 2rem; margin-bottom: 15px; display: block; }
+  .feature-card h3 { color: #fff; margin-bottom: 10px; font-size: 1.1rem; }
+  .feature-card p { font-size: 0.9rem; color: #8b949e; }
 
-      <div style="text-align: center; background: #fff; padding: 40px 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05);">
-        <strong style="display: block; font-size: 1.4rem; margin-bottom: 10px;">Bruno Silva</strong>
-        <span style="color: #701c1c; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Full-Stack Engineer</span>
-      </div>
+  /* ── Architecture Diagram ── */
+  .arch-box {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 12px;
+    padding: 30px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    overflow-x: auto;
+    color: #e6edf3;
+    line-height: 1.6;
+  }
+  .blue { color: #58a6ff; }
+  .green { color: #3fb950; }
 
-      <div style="text-align: center; background: #fff; padding: 40px 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05);">
-        <strong style="display: block; font-size: 1.4rem; margin-bottom: 10px;">Maria Cláudia</strong>
-        <span style="color: #701c1c; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">UX & Documentation</span>
-      </div>
+  /* ── Team ── */
+  .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 30px; }
+  .team-card { background: #0d1117; border: 1px solid #30363d; border-radius: 10px; padding: 20px; text-align: center; }
+  .team-card strong { display: block; color: #fff; font-size: 1rem; }
+  .team-card span { color: #701c1c; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; }
 
-      <div style="text-align: center; background: #fff; padding: 40px 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05);">
-        <strong style="display: block; font-size: 1.4rem; margin-bottom: 10px;">Wallyson Silva</strong>
-        <span style="color: #701c1c; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Backend & DBA</span>
-      </div>
+  /* ── Footer ── */
+  footer { text-align: center; padding: 60px 24px; color: #8b949e; font-size: 0.9rem; border-top: 1px solid #21262d; }
 
-      <div style="text-align: center; background: #fff; padding: 40px 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05);">
-        <strong style="display: block; font-size: 1.4rem; margin-bottom: 10px;">José Romildo</strong>
-        <span style="color: #701c1c; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Software Developer</span>
-      </div>
+  @media (max-width: 600px) {
+    .btn { width: 100%; justify-content: center; }
+  }
+</style>
 
-    </div>
-    <div style="text-align: center; margin-top: 100px; color: #bbb; font-size: 1rem; font-weight: 500;">
-      UNIVERSIDADE FEDERAL DE PERNAMBUCO | CENTRO DE INFORMÁTICA | 2026.1
-    </div>
-  </footer>
-
+<div class="hero">
+  <img class="hero-logo" src="https://raw.githubusercontent.com/lacavaalex/Projeto-EDOO/main/src/WhatsApp%20Image%202026-05-07%20at%2016.35.57.jpeg" alt="CIn-Events Logo">
+  <div class="hero-badge">CIn / UFPE · EDOO · 2026.1</div>
+  <h1>CIn-Events</h1>
+  <p class="hero-subtitle">
+    O ecossistema definitivo para gestão de eventos acadêmicos. Robustez <strong>C++ nativa</strong> integrada à experiência reativa do <strong>React.js</strong>.
+  </p>
+  <div class="cta-group">
+    <a class="btn btn-primary" href="https://github.com/lacavaalex/Projeto-EDOO">GitHub Repository</a>
+    <a class="btn btn-pdf" href="https://raw.githubusercontent.com/lacavaalex/Projeto-EDOO/main/src/Relat%C3%B3rio%20EDOO%20-%20CInEvents.pdf">Relatório Técnico (PDF)</a>
+  </div>
 </div>
+
+<div class="section">
+  <h2 class="section-title">🖥️ Demonstração Visual</h2>
+  <p class="section-subtitle">Interface administrativa e core de processamento.</p>
+  
+  <div class="screenshot-grid">
+    <div class="screenshot-card">
+      <img src="https://raw.githubusercontent.com/lacavaalex/Projeto-EDOO/main/src/Captura%20de%20tela%20de%202026-05-14%2017-42-49.png" alt="Admin Dashboard">
+      <div class="screenshot-label">Painel Admin — Gestão de Atividades</div>
+    </div>
+    <div class="screenshot-card">
+      <img src="https://raw.githubusercontent.com/lacavaalex/Projeto-EDOO/main/src/Captura%20de%20tela%20de%202026-05-14%2017-42-21.png" alt="Backend Terminal">
+      <div class="screenshot-label">Backend C++ — Motor de API Crow</div>
+    </div>
+  </div>
+</div>
+
+<div class="section-dark">
+  <div class="section">
+    <h2 class="section-title">🏗️ Arquitetura do Sistema</h2>
+    <p class="section-subtitle">Separação de responsabilidades via API REST.</p>
+    <div class="arch-box">
+      <span class="blue">┌───────────────┐</span>          <span class="green">┌──────────────────┐</span><br>
+      <span class="blue">│ React Frontend│</span> ◄──REST──► <span class="green">│ C++ Crow Backend │</span><br>
+      <span class="blue">└───────────────┘</span>          <span class="green">└─────────┬────────┘</span><br>
+                                           │<br>
+                                 <span class="blue">┌─────────┴────────┐</span><br>
+                                 <span class="blue">│ SQLite3 Engine   │</span><br>
+                                 <span class="blue">└──────────────────┘</span>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h2 class="section-title">🚀 Funcionalidades</h2>
+  <div class="features-grid">
+    <div class="feature-card">
+      <span class="feature-icon">⚡</span>
+      <h3>Performance Nativa</h3>
+      <p>Backend em C++ utilizando o framework Crow para garantir respostas imediatas às requisições.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">💾</span>
+      <h3>Persistência SQLite</h3>
+      <p>Armazenamento relacional robusto para eventos, palestras e hackathons.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🔐</span>
+      <h3>Auth Flexível</h3>
+      <p>Sistema de login que aceita Nome ou E-mail, com permissões distintas de Admin/User.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🧩</span>
+      <h3>Conceitos POO</h3>
+      <p>Uso rigoroso de Polimorfismo, Herança e Abstração (Classe Atividade).</p>
+    </div>
+  </div>
+</div>
+
+<div class="section-dark">
+  <div class="section">
+    <h2 class="section-title">👥 Equipe de Desenvolvimento</h2>
+    <div class="team-grid">
+      <div class="team-card"><strong>Alex Lacava</strong><span>PO & Backend</span></div>
+      <div class="team-card"><strong>Bruno Silva</strong><span>Full-Stack</span></div>
+      <div class="team-card"><strong>Maria Cláudia</strong><span>Full-Stack & Docs</span></div>
+      <div class="team-card"><strong>José Romildo</strong><span>Developer</span></div>
+      <div class="team-card"><strong>Wallyson Silva</strong><span>Backend & DBA</span></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2026 CIn-Events | Centro de Informática - UFPE</p>
+</footer>
