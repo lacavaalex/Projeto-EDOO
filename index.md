@@ -85,7 +85,7 @@ description: Sistema full-stack para gerenciamento de eventos acadêmicos do Cen
     max-width: 800px;
     margin: 0 auto;
     position: relative;
-    padding-bottom: 45%; /* Aspect Ratio 16:9 parcial ou customizado */
+    padding-bottom: 45%; 
     height: 0;
     overflow: hidden;
     border: 1px solid #30363d;
@@ -106,10 +106,11 @@ description: Sistema full-stack para gerenciamento de eventos acadêmicos do Cen
   .section-title { font-size: 2rem; font-weight: 800; color: #fff; margin-bottom: 10px; letter-spacing: -1px; }
   .section-subtitle { color: #8b949e; margin-bottom: 40px; font-size: 1.1rem; }
 
-  /* ── Screenshots ── */
-  .screenshot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+  /* ── Screenshots com Zoom Link ── */
+  .screenshot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
   .screenshot-card { background: #0d1117; border: 1px solid #30363d; border-radius: 12px; overflow: hidden; transition: 0.3s; }
-  .screenshot-card:hover { border-color: #58a6ff; }
+  .screenshot-card:hover { border-color: #58a6ff; transform: translateY(-2px); }
+  .screenshot-zoom-link { display: block; width: 100%; cursor: zoom-in; }
   .screenshot-card img { width: 100%; display: block; border-bottom: 1px solid #30363d; }
   .screenshot-label { padding: 15px; font-size: 0.85rem; color: #8b949e; font-weight: 600; text-align: center; }
 
@@ -120,29 +121,6 @@ description: Sistema full-stack para gerenciamento de eventos acadêmicos do Cen
   .feature-icon { font-size: 2rem; margin-bottom: 15px; display: block; }
   .feature-card h3 { color: #fff; margin-bottom: 10px; font-size: 1.1rem; }
   .feature-card p { font-size: 0.9rem; color: #8b949e; }
-
-  /* ── Technical Tables ── */
-  .tech-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-    background: #11161d;
-    border: 1px solid #30363d;
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  .tech-table th, .tech-table td {
-    padding: 14px 18px;
-    text-align: left;
-    border-bottom: 1px solid #21262d;
-  }
-  .tech-table th {
-    background-color: #161b22;
-    color: #fff;
-    font-weight: 700;
-  }
-  .tech-table tr:hover { background: #161b22; }
-  .tech-table td strong { color: #58a6ff; }
 
   /* ── Architecture Diagram ── */
   .arch-box {
@@ -178,7 +156,7 @@ description: Sistema full-stack para gerenciamento de eventos acadêmicos do Cen
   <div class="hero-badge">CIn / UFPE · EDOO · 2026.1</div>
   <h1>CIn-Events</h1>
   <p class="hero-subtitle">
-    O ecossistema definitivo para gestão de eventos acadêmicos. Robustez <strong>C++ nativa</strong> integrada à experiência reativa do <strong>React.js</strong>[cite: 142].
+    O CIn-Events permite que administradores gerenciem o ciclo de vida de eventos (Palestras, Workshops e Hackathons) e que alunos visualizem oportunidades de forma integrada. Este projeto é um sistema de gestão de eventos acadêmicos desenvolvido para a disciplina de Estrutura de Dados Orientada a Objetos no Centro de Informática da UFPE. O sistema utiliza uma arquitetura Full-stack, integrando um backend robusto em C++ com uma interface Single Page Application (SPA) em React. O objetivo do projeto foi treinar os conceitos do paradigma de Programação Orientada a Objeto aprendidos em sala.
   </p>
   <div class="cta-group">
     <a class="btn btn-primary" href="https://github.com/lacavaalex/Projeto-EDOO">GitHub Repository</a>
@@ -188,7 +166,7 @@ description: Sistema full-stack para gerenciamento de eventos acadêmicos do Cen
 
 <div class="section-dark">
   <div class="section" style="padding: 40px 24px;">
-    <h2 class="section-title" style="text-align: center;">▶️ Vídeo de Avaliação</h2>
+    <h2 class="section-title" style="text-align: center;">▶️ Vídeo de Evaluation</h2>
     <p class="section-subtitle" style="text-align: center;">Apresentação prática das funcionalidades e arquitetura da aplicação.</p>
     
     <div class="video-container">
@@ -205,15 +183,19 @@ description: Sistema full-stack para gerenciamento de eventos acadêmicos do Cen
 
 <div class="section">
   <h2 class="section-title">🖥️ Demonstração Visual</h2>
-  <p class="section-subtitle">Interface administrativa e core de processamento.</p>
+  <p class="section-subtitle">Interface administrativa e core de processamento. Clique na imagem para ampliá-la em tamanho completo.</p>
   
   <div class="screenshot-grid">
     <div class="screenshot-card">
-      <img src="./assets/Captura de tela de 2026-05-14 17-42-49.png" alt="Admin Dashboard">
+      <a class="screenshot-zoom-link" target="_blank" href="./assets/Captura de tela de 2026-05-14 17-42-49.png">
+        <img src="./assets/Captura de tela de 2026-05-14 17-42-49.png" alt="Admin Dashboard">
+      </a>
       <div class="screenshot-label">Painel Admin — Gestão de Atividades</div>
     </div>
     <div class="screenshot-card">
-      <img src="./assets/Captura de tela de 2026-05-14 17-42-21.png" alt="Backend Terminal">
+      <a class="screenshot-zoom-link" target="_blank" href="./assets/Captura de tela de 2026-05-14 17-42-21.png">
+        <img src="./assets/Captura de tela de 2026-05-14 17-42-21.png" alt="Backend Terminal">
+      </a>
       <div class="screenshot-label">Backend C++ — Motor de API Crow</div>
     </div>
   </div>
@@ -222,49 +204,17 @@ description: Sistema full-stack para gerenciamento de eventos acadêmicos do Cen
 <div class="section-dark">
   <div class="section">
     <h2 class="section-title">🏗️ Arquitetura do Sistema</h2>
-    <p class="section-subtitle">Separação de responsabilidades via API REST[cite: 235].</p>
+    <p class="section-subtitle">Separação de responsabilidades via API REST.</p>
     <div class="arch-box">
       <span class="blue">┌───────────────┐</span>          <span class="green">┌──────────────────┐</span><br>
       <span class="blue">│ React Frontend│</span> ◄──REST──► <span class="green">│ C++ Crow Backend │</span><br>
       <span class="blue">└───────────────┘</span>          <span class="green">└─────────┬────────┘</span><br>
-                                           │<br>
+                                            │<br>
                                  <span class="blue">┌─────────┴────────┐</span><br>
                                  <span class="blue">│ SQLite3 Engine   │</span><br>
                                  <span class="blue">└──────────────────┘</span>
     </div>
   </div>
-</div>
-
-<div class="section">
-  <h2 class="section-title">🧱 Engenharia Orientada a Objetos</h2>
-  <p class="section-subtitle">Implementação prática dos pilares de POO mapeados no core do projeto[cite: 245].</p>
-  
-  <table class="tech-table">
-    <thead>
-      <tr>
-        <th>Conceito Aplicado</th>
-        <th>Mapeamento no Projeto [cite: 245]</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>1. Abstração</strong></td>
-        <td>Uso da classe abstrata <code>Atividade</code> como interface comum para todos os eventos[cite: 246].</td>
-      </tr>
-      <tr>
-        <td><strong>2. Herança</strong></td>
-        <td>Especialização refinada das subclasses <code>Palestra</code>, <code>Workshop</code> e <code>Hackathon</code>[cite: 247].</td>
-      </tr>
-      <tr>
-        <td><strong>3. Polimorfismo Dinâmico</strong></td>
-        <td>Sobrescrita de métodos virtuais como <code>getDescricaoExtra()</code> e <code>getTipo()</code> para processamento genérico via ponteiros da classe base[cite: 248, 249].</td>
-      </tr>
-      <tr>
-        <td><strong>4. Encapsulamento</strong></td>
-        <td>Proteção rígida de dados usando modificadores de acesso estruturados no C++ e blindagem de estados dinâmicos no React[cite: 250].</td>
-      </tr>
-    </tbody>
-  </table>
 </div>
 
 <div class="section-dark">
@@ -273,77 +223,54 @@ description: Sistema full-stack para gerenciamento de eventos acadêmicos do Cen
     <div class="features-grid">
       <div class="feature-card">
         <span class="feature-icon">⚡</span>
-        <h3>Performance Nativa</h3>
-        <p>Backend em C++ utilizando o framework Crow para garantir respostas imediatas às requisições[cite: 235].</p>
+        <h3>Arquitetura Client-Server</h3>
+        <p>Comunicação via API REST robusta utilizando o framework Crow C++ para garantir respostas imediatas às requisições.</p>
       </div>
       <div class="feature-card">
         <span class="feature-icon">💾</span>
-        <h3>Persistência Híbrida</h3>
-        <p>Armazenamento relacional SQLite para o histórico de eventos combinado com persistência JSON para gerenciamento ágil de usuários[cite: 236].</p>
+        <h3>Persistência de Dados</h3>
+        <p>Armazenamento relacional SQLite para o histórico de eventos combinado com persistência JSON para gerenciamento ágil de usuários.</p>
       </div>
       <div class="feature-card">
         <span class="feature-icon">🔐</span>
-        <h3>Auth Flexível & Níveis</h3>
-        <p>Login flexível (E-mail ou Nome) com controle de sessão para estudantes e painel irrestrito CRUD para Administradores[cite: 238, 239].</p>
+        <h3>Sistema de Autenticação</h3>
+        <p>Login flexível para usuários (aceita E-mail ou Nome) com controle de sessão seguro.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🛠️</span>
+        <h3>Modo Administrador</h3>
+        <p>Acesso restrito para criação, edição completa de todos os campos e exclusão de eventos de forma centralizada.</p>
       </div>
       <div class="feature-card">
         <span class="feature-icon">🎨</span>
-        <h3>UI Inspirada em Terminal</h3>
-        <p>Estética refinada construída em React utilizando a tipografia JetBrains Mono, honrando a identidade visual clássica do CIn/UFPE[cite: 241].</p>
+        <h3>Interface Web Moderna</h3>
+        <p>Desenvolvida em React com roteamento dinâmico via react-router-dom. Estética inspirada em terminais (Fonte JetBrains Mono) honrando a identidade visual do CIn/UFPE.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🔔</span>
+        <h3>Sistema de Notificações</h3>
+        <p>Pop-ups customizados (Modais e Toasts) para fornecer feedback visual instantâneo de ações do sistema (CRUD e Auth).</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">📝</span>
+        <h3>Gestão Dinâmica (CRUD)</h3>
+        <p>Edição em tempo real de atributos como título, data, vagas, horário e local diretamente nos cards da interface.</p>
       </div>
     </div>
   </div>
 </div>
 
 <div class="section">
-  <h2 class="section-title">📊 Matriz de Responsabilidades</h2>
-  <p class="section-subtitle">Engenharia de equipe e divisão técnica do desenvolvimento[cite: 150].</p>
-  
-  <table class="tech-table">
-    <thead>
-      <tr>
-        <th>Membro da Equipe [cite: 151]</th>
-        <th>Atribuições Principais no Projeto [cite: 151]</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>Alex Lacava</strong></td>
-        <td>Product Owner, Desenvolvedor Back-End [cite: 151]</td>
-      </tr>
-      <tr>
-        <td><strong>Bruno Silva</strong></td>
-        <td>Desenvolvedor Front-End, Desenvolvedor Back-End [cite: 151]</td>
-      </tr>
-      <tr>
-        <td><strong>Maria Cláudia</strong></td>
-        <td>Desenvolvedora Back-End, Desenvolvedora Front-End, Documentação Técnica [cite: 151]</td>
-      </tr>
-      <tr>
-        <td><strong>Wallyson Silva</strong></td>
-        <td>Desenvolvedor Back-End, Administrador do Banco de Dados (DBA) [cite: 151]</td>
-      </tr>
-      <tr>
-        <td><strong>José Romildo</strong></td>
-        <td>Desenvolvedor Core [cite: 151]</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<div class="section-dark">
-  <div class="section">
-    <h2 class="section-title">👥 Equipe de Desenvolvimento</h2>
-    <div class="team-grid">
-      <div class="team-card"><strong>Alex Lacava</strong><span>PO & Backend</span></div>
-      <div class="team-card"><strong>Bruno Silva</strong><span>Full-Stack</span></div>
-      <div class="team-card"><strong>Maria Cláudia</strong><span>Full-Stack & Docs</span></div>
-      <div class="team-card"><strong>José Romildo</strong><span>Developer</span></div>
-      <div class="team-card"><strong>Wallyson Silva</strong><span>Backend & DBA</span></div>
-    </div>
+  <h2 class="section-title">👥 Equipe de Desenvolvimento</h2>
+  <div class="team-grid">
+    <div class="team-card"><strong>Alex Lacava</strong><span>PO & Backend</span></div>
+    <div class="team-card"><strong>Bruno Silva</strong><span>Full-Stack</span></div>
+    <div class="team-card"><strong>Maria Cláudia</strong><span>Full-Stack & Docs</span></div>
+    <div class="team-card"><strong>José Romildo</strong><span>Developer</span></div>
+    <div class="team-card"><strong>Wallyson Silva</strong><span>Backend & DBA</span></div>
   </div>
 </div>
 
 <footer>
-  <p>© 2026 CIn-Events | Centro de Informática - UFPE [cite: 127, 136]</p>
+  <p>© 2026 CIn-Events | Centro de Informática - UFPE</p>
 </footer>
