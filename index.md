@@ -171,7 +171,7 @@ description: Sistema full-stack para gerenciamento de eventos acadêmicos do Cen
     
     <div class="video-container">
       <iframe 
-        src="https://www.youtube.com/embed/SEU_VIDEO_ID_AQUI" 
+        src="https://www.youtube.com/embed/4HrEujCZLQE"
         title="Vídeo de Avaliação - CIn Events" 
         frameborder="0" 
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
